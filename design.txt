@@ -1,0 +1,63 @@
+Masters of Scrum - Hot Seat Development Dungeon Crawl
+
+Goal: v1.0 - High Score
+
+Requirements: Get to feature complete within the allowed turns. DO not necessarily have to touch all stories.
+
+Players:
+	1. QA Hammer
+		-Lays down connections between stories
+		-Moves 1
+		-Attack bonus against bugs / Reveals bugs / Reduced dmg from bugs
+	2. Dev Archer (UX)
+		-Reduction bonus on blue (UX) stories
+			+ against blue bugs
+		-Reduction penalty on red (Backend) stories
+			-against red bugs
+		-Normal reduction on yellow (Service Layer) stories
+			=against yellow bugs
+		-Ability: remote desktop - deal dog to a bug from 1 space away
+	3. Dev Sword/Board
+		+ on yellow stories/bugs
+		= on red stories/bugs
+		- on blue stories/bugs
+		
+		-Ability: hackathon - immune to bug dmg for 1 turn	
+	4. Scrum Master Wizard
+		-Enables dev movement with proximity
+		
+	5. PO DM (AI, not a player)
+		-Sets up board
+		-activates event cards
+		-sets up bug combat/spawning
+		-handle player movement etc...
+
+	6. Dev Two-Hander
+		+ on red stories/bugs
+		- on all other stories/bugs
+		
+		-ability: all night - destroy target bug. Cannot move next turn. 
+
+Game objects:
+
+	1. Board
+		-number of story slots
+		-number of connections available
+		-start / end
+		-random event cards
+		-bug system
+	2. Story
+		-has any number of players
+		-has a starting business value that can be reduced to green at <0
+		-Allows connections when green 
+	3. Connection
+		-laid by QA
+		-laid only between green stories
+		-creates path to end (feature)
+	4. Bug
+		-spawn chance each time a story value get reduced by a dev
+		-devs have normal bug detection, QA has high
+		-bugs not detected will eat connections if left alive
+		-bugs can deal dmg to players
+	5. Players
+		
