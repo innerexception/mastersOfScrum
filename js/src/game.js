@@ -1,4 +1,4 @@
-define(['phaser', 'lodash', 'player', 'mosPlayerTypes'], function(Phaser, _, Player, PlayerTypes){
+define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
     var MastersOfScrumApp = {};
 
@@ -71,12 +71,8 @@ define(['phaser', 'lodash', 'player', 'mosPlayerTypes'], function(Phaser, _, Pla
         //Camera init
         MastersOfScrumApp.gameInstance.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
 
-        //Objects
-        MastersOfScrumApp.qaPlayer = new Player(MastersOfScrumApp, PlayerTypes.QA);
-        MastersOfScrumApp.redPlayer = new Player(MastersOfScrumApp, PlayerTypes.BackendDev);
-        MastersOfScrumApp.yellowPlayer = new Player(MastersOfScrumApp, PlayerTypes.ServiceDev);
-        MastersOfScrumApp.bluePlayer = new Player(MastersOfScrumApp, PlayerTypes.UX);
-        MastersOfScrumApp.scrumMaster = new Player(MastersOfScrumApp, PlayerTypes.ScrumMaster);
+        //Object
+        MastersOfScrumApp.board = new Board(MastersOfScrumApp);
 
         //Start Intro
         MastersOfScrumApp.setUpIntro();
@@ -85,11 +81,7 @@ define(['phaser', 'lodash', 'player', 'mosPlayerTypes'], function(Phaser, _, Pla
 
     MastersOfScrumApp.update = function(){
         //Update data & collide stuff
-        MastersOfScrumApp.qaPlayer.update();
-        MastersOfScrumApp.redPlayer.update();
-        MastersOfScrumApp.yellowPlayer.update();
-        MastersOfScrumApp.bluePlayer.update();
-        MastersOfScrumApp.scrumMaster.update();
+        MastersOfScrumApp.board.update();
 
         ////Check to see if player touched any patrons
         //MastersOfScrumApp.gameInstance.physics.arcade.collide(
@@ -126,8 +118,7 @@ define(['phaser', 'lodash', 'player', 'mosPlayerTypes'], function(Phaser, _, Pla
 
     MastersOfScrumApp.startNewRound = function(){
         //Init new game session
-
-
+        MastersOfScrumApp.board.reset();
     };
 
     return MastersOfScrumApp;

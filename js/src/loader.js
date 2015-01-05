@@ -5,6 +5,7 @@ require.config({
         'masterOfScrumApp': 'src/game',
         'player': 'src/player',
         'mosPlayerTypes': 'src/mosPlayerTypes',
+        'board': 'src/board',
         'lodash': 'lib/lodash.min'
     },
     shim: {

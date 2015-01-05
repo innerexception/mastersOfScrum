@@ -8,7 +8,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
     this.playerSettings = mosPlayerType;
     this.isTweening = false;
     this.isAlive = true;
-    var x = 200;
+    var x = 50;
     var y = this.playerSettings.startY;//mastersOfScrumApp.gameInstance.world.height/2;
 
     //Graphicx
