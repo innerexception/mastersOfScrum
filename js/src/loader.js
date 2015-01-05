@@ -5,6 +5,8 @@ require.config({
         'masterOfScrumApp': 'src/game',
         'player': 'src/player',
         'mosPlayerTypes': 'src/mosPlayerTypes',
+        'story': 'src/story',
+        'mosStoryTypes': 'src/mosStoryTypes',
         'board': 'src/board',
         'lodash': 'lib/lodash.min'
     },

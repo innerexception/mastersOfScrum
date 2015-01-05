@@ -47,6 +47,9 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.logo.bounce=MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.logo);
         MastersOfScrumApp.logo.bounce.to({ y: MastersOfScrumApp.gameInstance.world.height/4 }, 3000, Phaser.Easing.Bounce.Out);
         MastersOfScrumApp.logo.bounce.start();
+
+        //Start Intro
+        MastersOfScrumApp.setUpIntro();
     }
 
     MastersOfScrumApp.preload = function(){
@@ -72,10 +75,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.gameInstance.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
 
         //Object
-        MastersOfScrumApp.board = new Board(MastersOfScrumApp);
-
-        //Start Intro
-        MastersOfScrumApp.setUpIntro();
+        MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2);
 
     };
 
@@ -83,14 +83,6 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //Update data & collide stuff
         MastersOfScrumApp.board.update();
 
-        ////Check to see if player touched any patrons
-        //MastersOfScrumApp.gameInstance.physics.arcade.collide(
-        //    MastersOfScrumApp.restaurant.patrons,
-        //    MastersOfScrumApp.player.sprite,
-        //    MastersOfScrumApp.player.playerHitPatron,
-        //    null,
-        //    MastersOfScrumApp.player);
-        //
 
         //Keep ground tile centered on camera
         MastersOfScrumApp.groundSprite.tilePosition.x = -MastersOfScrumApp.gameInstance.camera.x;
@@ -108,7 +100,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
     };
 
     MastersOfScrumApp.removeLogo = function(){
-        MastersOfScrumApp.gameInstance.input.onDown.remove(MastersOfScrumApp.removeLogo, MastersOfScrumApp.gameInstance);
+        MastersOfScrumApp.gameInstance.input.onDown.remove(MastersOfScrumApp.removeLogo, this);
         MastersOfScrumApp.logo.flicker = MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.logo);
         MastersOfScrumApp.logo.flicker.to({alpha:0}, 50, Phaser.Easing.Linear.None, true, 0, 50);
         MastersOfScrumApp.logo.flicker.start();

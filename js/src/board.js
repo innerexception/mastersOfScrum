@@ -1,5 +1,6 @@
-define(['lodash', 'player', 'mosPlayerTypes'], function(_, Player, PlayerTypes){
-    var Board = function(MastersOfScrumApp){
+define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], function(_, Player, PlayerTypes, Story, StoryTypes){
+    var Board = function(MastersOfScrumApp, rows, columns){
+        this.mastersOfScrumApp = MastersOfScrumApp;
         this.bugs = [];
         this.stories = [];
         this.connections = [];
@@ -11,9 +12,17 @@ define(['lodash', 'player', 'mosPlayerTypes'], function(_, Player, PlayerTypes){
         this.players = [this.qaPlayer, this.redPlayer, this.yellowPlayer, this.bluePlayer, this.scrumMaster];
 
         //Sprites
-        this.sprite = MastersOfScrumApp.gameInstance.add.sprite(50,50, '/res/sprite/board.png');
+        this.sprite = MastersOfScrumApp.gameInstance.add.sprite(150,150, '/res/sprite/board.png');
         this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(25, 25, '/res/sprite/endturn.png');
-        //this.endTurnSprite.onclick = this.endTurn();
+        this.endTurnSprite.inputEnabled = true;
+        this.endTurnSprite.events.onInputDown = this.endTurn;
+
+        //Stories
+        for(var i=0; i<rows; i++){
+            for(var j=0; j<columns; j++){
+                this.stories.push(new Story(this.mastersOfScrumApp, StoryTypes.Red, this.getRandomFib(), 200+(300 * i), 200+(300 * j)));
+            }
+        }
     };
 
     Board.prototype = {
@@ -42,15 +51,15 @@ define(['lodash', 'player', 'mosPlayerTypes'], function(_, Player, PlayerTypes){
                 player.stress = player.playerSettings.maxStress;
             });
             //set redDev to active
-            this.setActivePlayer(this.redPlayer);
+            this.setActivePlayer(this.players[0]);
         },
         endTurn: function(){
             //check victory
             //bug combat
             //reduce story values
             //random event
-            //set redDev to active
-            this.setActivePlayer(this.redPlayer);
+            //set first player to active
+            this.setActivePlayer(this.players[0]);
             //reset character stats
             _.each(this.players, function(player){
                 player.moves = player.maxMoves;
@@ -62,6 +71,15 @@ define(['lodash', 'player', 'mosPlayerTypes'], function(_, Player, PlayerTypes){
                 player.isActive = false;
             });
             playerObj.isActive = true;
+            this.mastersOfScrumApp.gameInstance.camera.follow(playerObj.sprite);
+        },
+        getRandomFib: function(){
+            var fibs = [0, 1];
+            for(var i=1; i<Math.round(Math.random()*8) + 1; i++){
+                fibs.push(fibs[i]+ fibs[i-1]);
+            }
+            console.log('return story of diff '+fibs[fibs.length-1]);
+            return fibs[fibs.length-1];
         }
     };
 

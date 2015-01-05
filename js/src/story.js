@@ -1,10 +1,12 @@
-define([], function(){
-    var Story = function(mastersOfScrumApp, storyType){
+define(['lodash'], function(_){
+    var Story = function(mastersOfScrumApp, storyType, difficulty, x, y){
 
-        this.board = mastersOfScrumApp.board;
+        this.mastersOfScrumApp = mastersOfScrumApp;
+
+        this.difficulty = difficulty;
 
         //Graphicx
-        this.sprite = mastersOfScrumApp.gameInstance.add.sprite(storyType.sprite.x,storyType.sprite.y,'/res/connection.png');
+        this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,y,'/res/connection.png');
         this.sprite.animations.add('sparkle');
 
         //2D physics
@@ -19,11 +21,23 @@ define([], function(){
 
     Story.prototype = {
         update: function(){
-            //this.sprite.animations.play('sparkle', 20);
+            _.each(this.mastersOfScrumApp.board.players, function(player){
+                this.mastersOfScrumApp.gameInstance.physics.arcade.collide(
+                    this.sprite,
+                    player.sprite,
+                    this.playerStoryCollide,
+                    null,
+                    this);
+            }, this);
         },
-        playerStoryCollide: function(playerObj){
+        playerStoryCollide: function(storySprite, playerSprite){
             //Set the player activeStory = this one
+            var playerObj = _.find(this.mastersOfScrumApp.board.players, function(player){
+                return player.sprite === playerSprite;
+            });
             playerObj.activeStory = this;
+            console.log('story collide!' + playerObj.playerSettings.name);
+            //this.sprite.animations.play('sparkle', 20);
         }
     };
 

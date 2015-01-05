@@ -48,6 +48,9 @@ define(['phaser', 'lodash'], function(Phaser, _){
       //	false means don't explode all the sprites at once, but instead release at a rate of one particle per 100ms
       //	The 3000 value is the lifespan of each particle before it's killed
     this.stressEmitter.start(false, 3000, 1000);
+
+    this.sprite.inputEnabled = true;
+    this.sprite.events.onInputDown.add(this.playerClicked, this);
   };
 
   Player.prototype = {
@@ -61,22 +64,27 @@ define(['phaser', 'lodash'], function(Phaser, _){
         }
     },
     update: function(){
-        if(!this.isTweening && this.isActive && this.playerSettings.moves > 0){
-            //if(this.mastersOfScrumApp.cursors.left.isDown){
-            //    this.sprite.angle -=4;
-            //}
-            //else if(this.mastersOfScrumApp.cursors.right.isDown){
-            //    this.sprite.angle +=4;
-            //}
+        if(!this.isTweening && this.isActive){
 
-            //if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){
-            if(this.mastersOfScrumApp.cursors.up.isDown){
-                this.speed = 150;
-                this.sprite.animations.play('walk', 10);
-                this.playerSettings.moves -= 0.1;
-                this.mastersOfScrumApp.gameInstance.physics.arcade.velocityFromRotation(this.sprite.rotation, this.speed, this.sprite.body.velocity);
-            }
             this.sprite.rotation = this.mastersOfScrumApp.gameInstance.physics.arcade.angleToPointer(this.sprite);
+
+            if(this.playerSettings.moves > 0) {
+                //if(this.mastersOfScrumApp.cursors.left.isDown){
+                //    this.sprite.angle -=4;
+                //}
+                //else if(this.mastersOfScrumApp.cursors.right.isDown){
+                //    this.sprite.angle +=4;
+                //}
+
+                //if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){
+                if (this.mastersOfScrumApp.cursors.up.isDown) {
+                    this.speed = 150;
+                    this.sprite.animations.play('walk', 10);
+                    this.playerSettings.moves -= 0.1;
+                    this.mastersOfScrumApp.gameInstance.physics.arcade.velocityFromRotation(this.sprite.rotation, this.speed, this.sprite.body.velocity);
+                }
+            }
+
         }
 
         if(this.speed > 0){
@@ -96,6 +104,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
         alert('lose.');
     },
     playerClicked: function(){
+        console.log('player clicked ' + this.playerSettings.name);
         this.mastersOfScrumApp.board.setActivePlayer(this);
     }
   };
