@@ -7,6 +7,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
     //Datas
     this.playerSettings = mosPlayerType;
     this.isTweening = false;
+    this.isActive = false;
     this.isAlive = true;
     var x = 50;
     var y = this.playerSettings.startY;//mastersOfScrumApp.gameInstance.world.height/2;
@@ -60,31 +61,29 @@ define(['phaser', 'lodash'], function(Phaser, _){
         }
     },
     update: function(){
-        if(!this.isTweening){
-            if(this.mastersOfScrumApp.cursors.left.isDown){
-                this.sprite.angle -=4;
-            }
-            else if(this.mastersOfScrumApp.cursors.right.isDown){
-                this.sprite.angle +=4;
-            }
+        if(!this.isTweening && this.isActive && this.playerSettings.moves > 0){
+            //if(this.mastersOfScrumApp.cursors.left.isDown){
+            //    this.sprite.angle -=4;
+            //}
+            //else if(this.mastersOfScrumApp.cursors.right.isDown){
+            //    this.sprite.angle +=4;
+            //}
+
+            //if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){
             if(this.mastersOfScrumApp.cursors.up.isDown){
                 this.speed = 150;
                 this.sprite.animations.play('walk', 10);
-            }
-            else{
-                if(this.speed > 0){
-                    this.speed -=14;
-                }
-            }
-            if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){
-                //Maybe do something on click?
-            }
-            if(this.speed > 0){
+                this.playerSettings.moves -= 0.1;
                 this.mastersOfScrumApp.gameInstance.physics.arcade.velocityFromRotation(this.sprite.rotation, this.speed, this.sprite.body.velocity);
             }
+            this.sprite.rotation = this.mastersOfScrumApp.gameInstance.physics.arcade.angleToPointer(this.sprite);
         }
 
-        this.sprite.rotation = this.mastersOfScrumApp.gameInstance.physics.arcade.angleToPointer(this.sprite);
+        if(this.speed > 0){
+            this.speed -=14;
+            this.speed = Math.max(0, this.speed);
+            this.mastersOfScrumApp.gameInstance.physics.arcade.velocityFromRotation(this.sprite.rotation, this.speed, this.sprite.body.velocity);
+        }
 
         this.stressEmitter.x = this.sprite.x;
         this.stressEmitter.y = this.sprite.y;
@@ -95,6 +94,9 @@ define(['phaser', 'lodash'], function(Phaser, _){
     },
     playerLoss : function(){
         alert('lose.');
+    },
+    playerClicked: function(){
+        this.mastersOfScrumApp.board.setActivePlayer(this);
     }
   };
 

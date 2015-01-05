@@ -34,8 +34,15 @@ define(['lodash', 'player', 'mosPlayerTypes'], function(_, Player, PlayerTypes){
         reset: function(){
             console.log('reset board');
             //generate and place stories
-            //reset character positions
+            //reset character positions & stats
+            _.each(this.players, function(player){
+                player.sprite.x = 50;
+                player.sprite.y = player.playerSettings.startY;
+                player.moves = player.playerSettings.maxMoves;
+                player.stress = player.playerSettings.maxStress;
+            });
             //set redDev to active
+            this.setActivePlayer(this.redPlayer);
         },
         endTurn: function(){
             //check victory
@@ -43,6 +50,18 @@ define(['lodash', 'player', 'mosPlayerTypes'], function(_, Player, PlayerTypes){
             //reduce story values
             //random event
             //set redDev to active
+            this.setActivePlayer(this.redPlayer);
+            //reset character stats
+            _.each(this.players, function(player){
+                player.moves = player.maxMoves;
+                player.stress = player.maxStress;
+            });
+        },
+        setActivePlayer: function(playerObj){
+            _.each(this.players, function(player){
+                player.isActive = false;
+            });
+            playerObj.isActive = true;
         }
     };
 

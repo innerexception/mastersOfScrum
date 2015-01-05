@@ -6,7 +6,9 @@ define([], function(){
     PlayerTypes.QA = {
         name: 'QA',
         stress : 150,
-        moves : 1,
+        maxStress : 150,
+        maxMoves : 1,
+        moves: 1,
         attack : 1,
         detectionModifyer: 2,
         bugModifyer : 0,
@@ -17,7 +19,9 @@ define([], function(){
     PlayerTypes.UX = {
         name: 'QA',
         stress : 100,
+        maxStress : 100,
         moves : 0,
+        maxMoves : 0,
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'blue',
@@ -28,7 +32,9 @@ define([], function(){
     PlayerTypes.ServiceDev = {
         name: 'SVC',
         stress : 100,
+        maxStress : 100,
         moves : 0,
+        maxMoves : 0,
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'yellow',
@@ -39,7 +45,9 @@ define([], function(){
     PlayerTypes.BackendDev = {
         name: 'SQL',
         stress : 100,
-        moves : 0,
+        maxStress : 100,
+        moves : 10,
+        maxMoves : 10,
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'red',
@@ -50,7 +58,9 @@ define([], function(){
     PlayerTypes.ScrumMaster = {
         name: 'SCRUM',
         stress : 50,
+        maxStress : 50,
         moves : 2,
+        maxMoves : 2,
         attack : 0,
         bugModifyer : 0,
         spritePath: '/res/sprite/scrum.png',
