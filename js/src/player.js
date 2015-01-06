@@ -44,11 +44,10 @@ define(['phaser', 'lodash'], function(Phaser, _){
         //stress
         this.moveEmitter = mastersOfScrumApp.gameInstance.add.emitter(this.sprite.x, 200, 200);
 
-        this.moveEmitter.makeParticles(['moveSprite1', 'moveSprite2', 'moveSprite3']);
+        this.moveEmitter.makeParticles('smoke');
 
-        this.moveEmitter.setRotation(0, 0);
+        this.moveEmitter.setRotation(0, 90);
         this.moveEmitter.setAlpha(0.3, 0.8);
-        this.moveEmitter.setScale(0.5, 1);
         this.moveEmitter.gravity = 0;
 
       //	false means don't explode all the sprites at once, but instead release at a rate of one particle per 100ms
@@ -100,7 +99,11 @@ define(['phaser', 'lodash'], function(Phaser, _){
                     this.moveEmitter.on = false;
                 }
             }
-
+        }
+        else{
+            if(this.moveEmitter.on){
+                this.moveEmitter.on = false;
+            }
         }
 
         if(this.speed > 0){
