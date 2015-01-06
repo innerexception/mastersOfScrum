@@ -2,18 +2,18 @@ define([], function(){
 
     var StoryTypes = {};
 
-    StoryTypes.Red = {
-        spritePath : '/res/sprite/redStory.png',
-        description: 'Red Story'
+    StoryTypes.Green = {
+        spritePath : 'greenStory',
+        description: 'Green Story'
     };
 
     StoryTypes.Yellow = {
-        spritePath : '/res/sprite/yellowStory.png',
+        spritePath : 'yellowStory',
         description: 'Yellow Story'
     };
 
     StoryTypes.Blue = {
-        spritePath : '/res/sprite/blueStory.png',
+        spritePath : 'blueStory',
         description: 'Blue Story'
     };
 

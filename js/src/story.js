@@ -6,7 +6,7 @@ define(['lodash'], function(_){
         this.difficulty = difficulty;
 
         //Graphicx
-        this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,y,'/res/connection.png');
+        this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,y,storyType.spritePath);
         this.sprite.animations.add('sparkle');
 
         //2D physics
@@ -37,7 +37,14 @@ define(['lodash'], function(_){
             });
             playerObj.activeStory = this;
             console.log('story collide!' + playerObj.playerSettings.name);
-            //this.sprite.animations.play('sparkle', 20);
+            //Tween player onto story card
+            playerObj.isActive = false;
+            playerObj.sprite.bringToTop();
+            playerObj.avatarSprite.bringToTop();
+            //this.sprite.body.canCollide = false;
+            this.mastersOfScrumApp.playerTween = this.mastersOfScrumApp.gameInstance.add.tween(playerObj.sprite);
+            this.mastersOfScrumApp.playerTween.to({x:this.sprite.x, y:this.sprite.y, angle:0}, 3000, Phaser.Easing.Bounce.Out);
+            this.mastersOfScrumApp.playerTween.start();
         }
     };
 

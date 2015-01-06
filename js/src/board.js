@@ -4,23 +4,22 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.bugs = [];
         this.stories = [];
         this.connections = [];
-        this.qaPlayer = new Player(MastersOfScrumApp, PlayerTypes.QA);
-        this.redPlayer = new Player(MastersOfScrumApp, PlayerTypes.BackendDev);
-        this.yellowPlayer = new Player(MastersOfScrumApp, PlayerTypes.ServiceDev);
-        this.bluePlayer = new Player(MastersOfScrumApp, PlayerTypes.UX);
-        this.scrumMaster = new Player(MastersOfScrumApp, PlayerTypes.ScrumMaster);
+        this.qaPlayer = new Player(MastersOfScrumApp, PlayerTypes.QA, 'userA');
+        this.redPlayer = new Player(MastersOfScrumApp, PlayerTypes.BackendDev, 'userB');
+        this.yellowPlayer = new Player(MastersOfScrumApp, PlayerTypes.ServiceDev, 'userC');
+        this.bluePlayer = new Player(MastersOfScrumApp, PlayerTypes.UX, 'userD');
+        this.scrumMaster = new Player(MastersOfScrumApp, PlayerTypes.ScrumMaster, 'userE');
         this.players = [this.qaPlayer, this.redPlayer, this.yellowPlayer, this.bluePlayer, this.scrumMaster];
 
         //Sprites
-        this.sprite = MastersOfScrumApp.gameInstance.add.sprite(150,150, '/res/sprite/board.png');
-        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(25, 25, '/res/sprite/endturn.png');
+        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(25, 25, 'res/sprite/endturn.png');
         this.endTurnSprite.inputEnabled = true;
         this.endTurnSprite.events.onInputDown = this.endTurn;
 
         //Stories
         for(var i=0; i<rows; i++){
             for(var j=0; j<columns; j++){
-                this.stories.push(new Story(this.mastersOfScrumApp, StoryTypes.Red, this.getRandomFib(), 200+(300 * i), 200+(300 * j)));
+                this.stories.push(new Story(this.mastersOfScrumApp, this.getRandomStoryType(), this.getRandomFib(), 400+(400 * i), 200+(400 * j)));
             }
         }
     };
@@ -80,6 +79,19 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             }
             console.log('return story of diff '+fibs[fibs.length-1]);
             return fibs[fibs.length-1];
+        },
+        getRandomStoryType: function(){
+            switch(Math.round(Math.random()*2) + 1){
+                case 1:
+                    return StoryTypes.Green;
+                    break;
+                case 2:
+                    return StoryTypes.Yellow;
+                    break;
+                case 3:
+                    return StoryTypes.Blue;
+                    break;
+            }
         }
     };
 

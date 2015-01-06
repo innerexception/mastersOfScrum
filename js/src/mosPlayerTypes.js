@@ -12,7 +12,7 @@ define([], function(){
         attack : 1,
         detectionModifyer: 2,
         bugModifyer : 0,
-        spritePath: '/res/sprite/qa.png',
+        spritePath: 'redPlayer',
         startY: 100
     };
 
@@ -25,7 +25,7 @@ define([], function(){
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'blue',
-        spritePath: '/res/sprite/ux.png',
+        spritePath: 'bluePlayer',
         startY: 200
     };
 
@@ -38,7 +38,7 @@ define([], function(){
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'yellow',
-        spritePath: '/res/sprite/svc.png',
+        spritePath: 'yellowPlayer',
         startY: 300
     };
 
@@ -51,7 +51,7 @@ define([], function(){
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'red',
-        spritePath: '/res/sprite/sql.png',
+        spritePath: 'greenPlayer',
         startY: 400
     };
 
@@ -63,7 +63,7 @@ define([], function(){
         maxMoves : 2,
         attack : 0,
         bugModifyer : 0,
-        spritePath: '/res/sprite/scrum.png',
+        spritePath: 'babyBluePlayer',
         startY: 500
     };
 

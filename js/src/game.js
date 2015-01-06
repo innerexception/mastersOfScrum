@@ -54,7 +54,22 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
     MastersOfScrumApp.preload = function(){
         //Load all assets here
-        //MastersOfScrumApp.gameInstance.load.image('ground', 'res/img/principalGreen.png');
+        MastersOfScrumApp.gameInstance.load.image('board', 'res/sprite/bg.png');
+        MastersOfScrumApp.gameInstance.load.image('greenPlayer', 'res/sprite/greenPlayer.png');
+        MastersOfScrumApp.gameInstance.load.image('yellowPlayer', 'res/sprite/yellowPlayer.png');
+        MastersOfScrumApp.gameInstance.load.image('bluePlayer', 'res/sprite/bluePlayer.png');
+        MastersOfScrumApp.gameInstance.load.image('babyBluePlayer', 'res/sprite/babyBluePlayer.png');
+        MastersOfScrumApp.gameInstance.load.image('redPlayer', 'res/sprite/redPlayer.png');
+        MastersOfScrumApp.gameInstance.load.image('greenStory', 'res/sprite/greenStory.png');
+        MastersOfScrumApp.gameInstance.load.image('yellowStory', 'res/sprite/yellowStory.png');
+        MastersOfScrumApp.gameInstance.load.image('blueStory', 'res/sprite/blueStory.png');
+        MastersOfScrumApp.gameInstance.load.image('userA', 'res/sprite/userA.png');
+        MastersOfScrumApp.gameInstance.load.image('userB', 'res/sprite/userB.png');
+        MastersOfScrumApp.gameInstance.load.image('userC', 'res/sprite/userC.png');
+        MastersOfScrumApp.gameInstance.load.image('userD', 'res/sprite/userD.png');
+        MastersOfScrumApp.gameInstance.load.image('userE', 'res/sprite/userE.png');
+
+
         //MastersOfScrumApp.gameInstance.load.spritesheet('torso', 'res/img/torso2.png', 32, 32);
         //  Load the Google WebFont Loader script
         MastersOfScrumApp.gameInstance.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
@@ -66,7 +81,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.gameInstance.world.setBounds(0,0,1000,1000);
 
         //Sprites
-        MastersOfScrumApp.groundSprite = MastersOfScrumApp.gameInstance.add.tileSprite(0,0,1024,768, 'ground');
+        MastersOfScrumApp.groundSprite = MastersOfScrumApp.gameInstance.add.sprite(0,0, 'board');
 
         //Keyboard init
         MastersOfScrumApp.cursors = MastersOfScrumApp.gameInstance.input.keyboard.createCursorKeys();
@@ -74,19 +89,15 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //Camera init
         MastersOfScrumApp.gameInstance.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
 
-        //Object
-        MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2);
-
     };
 
     MastersOfScrumApp.update = function(){
         //Update data & collide stuff
-        MastersOfScrumApp.board.update();
-
+        if(MastersOfScrumApp.board) MastersOfScrumApp.board.update();
 
         //Keep ground tile centered on camera
-        MastersOfScrumApp.groundSprite.tilePosition.x = -MastersOfScrumApp.gameInstance.camera.x;
-        MastersOfScrumApp.groundSprite.tilePosition.y = -MastersOfScrumApp.gameInstance.camera.y;
+        //MastersOfScrumApp.groundSprite.tilePosition.x = -MastersOfScrumApp.gameInstance.camera.x;
+        //MastersOfScrumApp.groundSprite.tilePosition.y = -MastersOfScrumApp.gameInstance.camera.y;
 
     };
 
@@ -110,7 +121,9 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
     MastersOfScrumApp.startNewRound = function(){
         //Init new game session
-        MastersOfScrumApp.board.reset();
+
+        //Object
+        MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2);
     };
 
     return MastersOfScrumApp;
