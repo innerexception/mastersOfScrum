@@ -31,6 +31,16 @@ define(['lodash'], function(_){
             .to({ fontSize: 24 }, 1000, Phaser.Easing.Linear.None)
             .to({ fontSize: 12 }, 1000, Phaser.Easing.Bounce.Out);
         this.difficultyText.bounce.start();
+
+        this.spin=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
+            .to({angle: 30}, 150, Phaser.Easing.Linear.None)
+            .to({angle: -30}, 150, Phaser.Easing.Linear.None)
+            .to({angle: 0}, 150, Phaser.Easing.Linear.None);
+        this.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite.scale)
+            .to({x: 1.2, y: 1.2}, 150, Phaser.Easing.Linear.None)
+            .to({x:1, y:1}, 500, Phaser.Easing.Linear.None);
+        this.yellow=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
+            .to({tint: 0xffff00}, 1000, Phaser.Easing.Linear.None);
     };
 
     Story.prototype = {
@@ -46,12 +56,17 @@ define(['lodash'], function(_){
         },
         setDifficulty: function(value){
             //Render current difficulty value
-            this.difficulty = value;
-            this.difficultyText.text = value;
+            this.difficulty = value < 0 ? 0 : value;
+            this.difficultyText.text = this.difficulty;
             this.difficultyText.bounce
                 .to({ fontSize: 24 }, 1000, Phaser.Easing.Linear.None)
                 .to({ fontSize: 12 }, 1000, Phaser.Easing.Bounce.Out);
             this.difficultyText.bounce.start();
+            if(this.difficulty === 0){
+                //Spin card to yellow state
+                this.spin.start();
+                this.yellow.start();
+            }
         },
         playerStoryCollide: function(storySprite, playerSprite){
             //Set the player activeStory = this one
@@ -76,6 +91,8 @@ define(['lodash'], function(_){
             this.mastersOfScrumApp.playerTween = this.mastersOfScrumApp.gameInstance.add.tween(playerObj.sprite);
             this.mastersOfScrumApp.playerTween.to({x:this.sprite.x, y:this.sprite.y-10, angle:0}, 3000, Phaser.Easing.Bounce.Out);
             this.mastersOfScrumApp.playerTween.start();
+
+            this.bounce.start();
         }
     };
 
