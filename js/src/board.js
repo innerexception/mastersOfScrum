@@ -12,9 +12,9 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.players = [this.qaPlayer, this.redPlayer, this.yellowPlayer, this.bluePlayer, this.scrumMaster];
 
         //Sprites
-        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(25, 25, 'res/sprite/endturn.png');
+        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(400, 10, 'hourglass');
         this.endTurnSprite.inputEnabled = true;
-        this.endTurnSprite.events.onInputDown = this.endTurn;
+        this.endTurnSprite.events.onInputDown.add(this.endTurn, this);
 
         //Stories
         for(var i=0; i<rows; i++){
@@ -56,6 +56,16 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             //check victory
             //bug combat
             //reduce story values
+            _.each(this.stories, function(story){
+                var playerReductionTotal = _.reduce(this.players, function(result, player){
+                    if(player.activeStory === story){
+                        result += 2;
+                    }
+                    return result;
+                }, 0, this);
+                if(playerReductionTotal)
+                    story.setDifficulty(story.difficulty -= playerReductionTotal);
+            }, this);
             //random event
             //set first player to active
             this.setActivePlayer(this.players[0]);
@@ -66,11 +76,16 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             });
         },
         setActivePlayer: function(playerObj){
-            _.each(this.players, function(player){
-                player.isActive = false;
-            });
-            playerObj.isActive = true;
-            this.mastersOfScrumApp.gameInstance.camera.follow(playerObj.sprite);
+            if(playerObj){
+                _.each(this.players, function(player){
+                    player.isActive = false;
+                });
+                playerObj.isActive = true;
+                this.mastersOfScrumApp.gameInstance.camera.follow(playerObj.sprite);
+            }
+            else{
+                this.mastersOfScrumApp.gameInstance.camera.unfollow();
+            }
         },
         getRandomFib: function(){
             var fibs = [0, 1];

@@ -17,6 +17,20 @@ define(['lodash'], function(_){
 
         //Angle == rotation
         this.sprite.angle = 0;
+
+        this.difficultyText = this.mastersOfScrumApp.gameInstance.add.text(this.sprite.x+(this.sprite.width/2)-15, this.sprite.y+(this.sprite.height/2)-15, this.difficulty);
+        this.difficultyText.anchor.setTo(0.5);
+        this.difficultyText.font = 'Press Start 2P';
+        this.difficultyText.fontSize = 12;
+        this.difficultyText.fill = '#FFFFFF';
+        this.difficultyText.align = 'center';
+        this.difficultyText.stroke = '#000000';
+        this.difficultyText.strokeThickness = 2;
+        this.difficultyText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+        this.difficultyText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.difficultyText)
+            .to({ fontSize: 24 }, 1000, Phaser.Easing.Linear.None)
+            .to({ fontSize: 12 }, 1000, Phaser.Easing.Bounce.Out);
+        this.difficultyText.bounce.start();
     };
 
     Story.prototype = {
@@ -29,6 +43,15 @@ define(['lodash'], function(_){
                     null,
                     this);
             }, this);
+        },
+        setDifficulty: function(value){
+            //Render current difficulty value
+            this.difficulty = value;
+            this.difficultyText.text = value;
+            this.difficultyText.bounce
+                .to({ fontSize: 24 }, 1000, Phaser.Easing.Linear.None)
+                .to({ fontSize: 12 }, 1000, Phaser.Easing.Bounce.Out);
+            this.difficultyText.bounce.start();
         },
         playerStoryCollide: function(storySprite, playerSprite){
             //Set the player activeStory = this one

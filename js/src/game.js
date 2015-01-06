@@ -69,7 +69,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.gameInstance.load.image('userD', 'res/sprite/userD.png');
         MastersOfScrumApp.gameInstance.load.image('userE', 'res/sprite/userE.png');
         MastersOfScrumApp.gameInstance.load.image('smoke', 'res/sprite/smoke.png');
-
+        MastersOfScrumApp.gameInstance.load.image('hourglass', 'res/sprite/hourglass.png');
 
         //MastersOfScrumApp.gameInstance.load.spritesheet('torso', 'res/img/torso2.png', 32, 32);
         //  Load the Google WebFont Loader script
@@ -81,8 +81,10 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //1st time load
         MastersOfScrumApp.gameInstance.world.setBounds(0,0,1000,1000);
 
-        //Sprites
+        //Base sprite
         MastersOfScrumApp.groundSprite = MastersOfScrumApp.gameInstance.add.sprite(0,0, 'board');
+        MastersOfScrumApp.groundSprite.inputEnabled = true;
+        MastersOfScrumApp.groundSprite.events.onInputDown.add(MastersOfScrumApp.unlockCamera, this);
 
         //Keyboard init
         MastersOfScrumApp.cursors = MastersOfScrumApp.gameInstance.input.keyboard.createCursorKeys();
@@ -99,6 +101,24 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //Keep ground tile centered on camera
         //MastersOfScrumApp.groundSprite.tilePosition.x = -MastersOfScrumApp.gameInstance.camera.x;
         //MastersOfScrumApp.groundSprite.tilePosition.y = -MastersOfScrumApp.gameInstance.camera.y;
+
+        if(!MastersOfScrumApp.gameInstance.camera.target){
+            //Mouse moves camera if not following something
+            var pointerPosition = MastersOfScrumApp.gameInstance.input.mousePointer.position;
+            var camera = MastersOfScrumApp.gameInstance.camera;
+            if(pointerPosition.x >= 700 && camera.x <= 1000){
+                camera.x+=5;
+            }
+            if(pointerPosition.y >= 500 && camera.y <= 1000){
+                camera.y+=5;
+            }
+            if(pointerPosition.x < 20 && camera.x > 0){
+                camera.x-=5;
+            }
+            if(pointerPosition.y < 20 && camera.y > 0){
+                camera.y-=5;
+            }
+        }
 
     };
 
@@ -118,6 +138,12 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.logo.flicker.start();
 
         MastersOfScrumApp.startNewRound();
+    };
+
+    MastersOfScrumApp.unlockCamera = function(){
+        if(MastersOfScrumApp.board){
+            MastersOfScrumApp.board.setActivePlayer(null);
+        }
     };
 
     MastersOfScrumApp.startNewRound = function(){
