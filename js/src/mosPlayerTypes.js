@@ -7,8 +7,8 @@ define([], function(){
         name: 'QA',
         stress : 150,
         maxStress : 150,
-        maxMoves : 1,
-        moves: 1,
+        maxMoves : 100,
+        moves: 100,
         attack : 1,
         detectionModifyer: 2,
         bugModifyer : 0,
@@ -17,7 +17,7 @@ define([], function(){
     };
 
     PlayerTypes.UX = {
-        name: 'QA',
+        name: 'UX',
         stress : 100,
         maxStress : 100,
         moves : 100,

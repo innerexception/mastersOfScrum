@@ -5,6 +5,7 @@ require.config({
         'masterOfScrumApp': 'src/game',
         'player': 'src/player',
         'mosPlayerTypes': 'src/mosPlayerTypes',
+        'connection': 'src/connection',
         'story': 'src/story',
         'mosStoryTypes': 'src/mosStoryTypes',
         'board': 'src/board',

@@ -3,7 +3,6 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.mastersOfScrumApp = MastersOfScrumApp;
         this.bugs = [];
         this.stories = [];
-        this.connections = [];
         this.qaPlayer = new Player(MastersOfScrumApp, PlayerTypes.QA, 'userA');
         this.redPlayer = new Player(MastersOfScrumApp, PlayerTypes.BackendDev, 'userB');
         this.yellowPlayer = new Player(MastersOfScrumApp, PlayerTypes.ServiceDev, 'userC');
@@ -82,9 +81,6 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                 });
                 playerObj.isActive = true;
                 this.mastersOfScrumApp.gameInstance.camera.follow(playerObj.sprite);
-            }
-            else{
-                this.mastersOfScrumApp.gameInstance.camera.unfollow();
             }
         },
         getRandomFib: function(){
