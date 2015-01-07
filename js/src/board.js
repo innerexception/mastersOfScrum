@@ -1,5 +1,5 @@
 define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], function(_, Player, PlayerTypes, Story, StoryTypes){
-    var Board = function(MastersOfScrumApp, rows, columns){
+    var Board = function(MastersOfScrumApp, rows, columns, gameLength){
         this.mastersOfScrumApp = MastersOfScrumApp;
         this.bugs = [];
         this.stories = [];
@@ -9,12 +9,32 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.bluePlayer = new Player(MastersOfScrumApp, PlayerTypes.UX, 'userD');
         this.scrumMaster = new Player(MastersOfScrumApp, PlayerTypes.ScrumMaster, 'userE');
         this.players = [this.qaPlayer, this.redPlayer, this.yellowPlayer, this.bluePlayer, this.scrumMaster];
+        this.gameLength = gameLength;
+        this.maxGameLength = gameLength;
 
         //Sprites
         this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(400, 10, 'hourglass');
         this.endTurnSprite.inputEnabled = true;
         this.endTurnSprite.events.onInputDown.add(this.endTurn, this);
 
+        //Turn tracker
+        this.turnText = MastersOfScrumApp.gameInstance.add.text(800, 20, this.getTurnString());
+        this.turnText.anchor.setTo(0.5);
+
+        this.turnText.font = 'Press Start 2P';
+        this.turnText.fontSize = 14;
+
+        this.turnText.fill = '#FFFFFF';
+
+        this.turnText.align = 'center';
+        this.turnText.stroke = '#000000';
+        this.turnText.strokeThickness = 2;
+        this.turnText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+
+        this.turnText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.turnText);
+        this.turnText.bounce.to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 }, 3000, Phaser.Easing.Bounce.Out);
+        this.turnText.bounce.start();
+        
         //Stories
         for(var i=0; i<rows; i++){
             for(var j=0; j<columns; j++){
@@ -73,6 +93,10 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                 player.moves = player.maxMoves;
                 player.stress = player.maxStress;
             });
+            //decrement turns
+            this.gameLength--;
+            this.turnText.text = this.getTurnString();
+
         },
         setActivePlayer: function(playerObj){
             if(playerObj){
@@ -103,6 +127,9 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                     return StoryTypes.Blue;
                     break;
             }
+        },
+        getTurnString: function(){
+            return 'TURNS REMAINING: ' + this.gameLength + ' / ' +this.maxGameLength;
         }
     };
 

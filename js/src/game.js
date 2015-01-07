@@ -151,7 +151,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //Init new game session
 
         //Object
-        MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2);
+        MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2, 5);
     };
 
     return MastersOfScrumApp;
