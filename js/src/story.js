@@ -51,8 +51,8 @@ define(['lodash', 'connection'], function(_, Connection){
             .to({tint: 0xffffff}, 3000, Phaser.Easing.Linear.None)
             .loop();
         this.green=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
-            .to({tint: 0x00ff00}, 3000, Phaser.Easing.Linear.None)
             .to({tint: 0xffffff}, 3000, Phaser.Easing.Linear.None)
+            .to({tint: 0x00ff00}, 3000, Phaser.Easing.Linear.None)
             .loop();
 
     };
@@ -135,22 +135,27 @@ define(['lodash', 'connection'], function(_, Connection){
                 tempTween.start();
             }, this);
             //Tween player onto story card
-            playerObj.activeStory = this;
-            this.mastersOfScrumApp.board.setActivePlayer(null);
-            playerObj.sprite.bringToTop();
-            playerObj.avatarSprite.bringToTop();
-            this.mastersOfScrumApp.playerTween = this.mastersOfScrumApp.gameInstance.add.tween(playerObj.sprite);
-            this.mastersOfScrumApp.playerTween.to({x:this.sprite.x, y:this.sprite.y-10, angle:0}, 3000, Phaser.Easing.Bounce.Out);
-            this.mastersOfScrumApp.playerTween.start();
+            //Only devs can have active stories
+            if(playerObj.playerSettings.name.indexOf('Dev') > 0) playerObj.activeStory = this;
 
-            this.bounce.start();
+            //Scrum master can never dock with cards
+            if(playerObj.playerSettings.name!='SCRUM'){
+                this.mastersOfScrumApp.board.setActivePlayer(null);
+                playerObj.sprite.bringToTop();
+                playerObj.avatarSprite.bringToTop();
+                this.mastersOfScrumApp.playerTween = this.mastersOfScrumApp.gameInstance.add.tween(playerObj.sprite);
+                this.mastersOfScrumApp.playerTween.to({x:this.sprite.x, y:this.sprite.y-10, angle:0}, 3000, Phaser.Easing.Bounce.Out);
+                this.mastersOfScrumApp.playerTween.start();
 
-            if(playerObj.playerSettings.name === 'QA' && this.difficulty === 0) {
-                //Set to green, enter path laying mode
-                //this.yellow.stop();
-                //this.green.start();
-                if(!this.handle2){
-                    this.startPathBuilder();
+                this.bounce.start();
+
+                if(playerObj.playerSettings.name === 'QA' && this.difficulty === 0) {
+                    //Set to green, enter path laying mode
+                    this.yellow.stop();
+                    this.green.start();
+                    if(!this.handle2){
+                        this.startPathBuilder();
+                    }
                 }
             }
         },

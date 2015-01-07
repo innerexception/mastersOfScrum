@@ -17,11 +17,11 @@ define([], function(){
     };
 
     PlayerTypes.UX = {
-        name: 'UX',
+        name: 'UX Dev',
         stress : 100,
         maxStress : 100,
         moves : 0,
-        maxMoves : 0,
+        maxMoves : 25,
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'blue',
@@ -30,11 +30,11 @@ define([], function(){
     };
 
     PlayerTypes.ServiceDev = {
-        name: 'SVC',
+        name: 'SVC Dev',
         stress : 100,
         maxStress : 100,
         moves : 0,
-        maxMoves : 0,
+        maxMoves : 25,
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'yellow',
@@ -43,11 +43,11 @@ define([], function(){
     };
 
     PlayerTypes.BackendDev = {
-        name: 'SQL',
+        name: 'SQL Dev',
         stress : 100,
         maxStress : 100,
         moves : 0,
-        maxMoves : 0,
+        maxMoves : 25,
         attack : 1,
         bugModifyer : 1,
         storyBonus : 'red',

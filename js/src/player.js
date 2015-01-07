@@ -20,10 +20,10 @@ define(['phaser', 'lodash'], function(Phaser, _){
         mastersOfScrumApp.gameInstance.physics.enable(this.sprite, Phaser.Physics.ARCADE);
         this.sprite.body.immovable = false;
         this.sprite.body.collideWorldBounds = true;
-        this.sprite.body.drag.set(0.2);
+        this.sprite.body.drag.set(100);
         this.sprite.body.maxVelocity.setTo(400,400);
         //1 == full rebound on collision
-        this.sprite.body.bounce.setTo(1,1);
+        this.sprite.body.bounce.setTo(0.05,0.05);
         //Angle == rotation
         this.sprite.angle = mastersOfScrumApp.gameInstance.rnd.angle();
 
@@ -33,6 +33,13 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.avatarSprite.angle = this.sprite.angle;
         this.avatarSprite.inputEnabled = true;
         this.avatarSprite.events.onInputDown.add(this.playerClicked, this);
+        mastersOfScrumApp.gameInstance.physics.enable(this.avatarSprite, Phaser.Physics.ARCADE);
+        this.avatarSprite.body.immovable = false;
+        this.avatarSprite.body.collideWorldBounds = true;
+        this.avatarSprite.body.drag.set(100);
+        this.avatarSprite.body.maxVelocity.setTo(400,400);
+        //1 == full rebound on collision
+        this.avatarSprite.body.bounce.setTo(0.05,0.05);
         //
         ////dishes
         //this.dishes = mastersOfScrumApp.gameInstance.add.group();
@@ -64,7 +71,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
             this.playerSettings.stress -= stress;
         }
         if(this.playerSettings.stress < 0){
-            this.playerLoss();
+            this.mastersOfScrumApp.runLoss();
         }
     },
     update: function(){
@@ -102,6 +109,16 @@ define(['phaser', 'lodash'], function(Phaser, _){
             }
         }
 
+        //If collide with other player, fill their movement
+        _.each(this.mastersOfScrumApp.board.players, function(player){
+            this.mastersOfScrumApp.gameInstance.physics.arcade.collide(
+                this.sprite,
+                player.sprite,
+                this.qaPlayerCollide,
+                null,
+                this);
+        }, this);
+
 
         if(this.playerSettings.moves > 0) {
             this.sprite.scale.x = (this.playerSettings.moves / this.playerSettings.maxMoves) * (this.playerSettings.maxMoves / 25);
@@ -124,14 +141,25 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.avatarSprite.y = this.sprite.y;
 
     },
-    playerLoss : function(){
-        alert('lose.');
-    },
     playerClicked: function(){
         console.log('player clicked ' + this.playerSettings.name);
         this.moveEmitter.kill();
         this.moveEmitter.visible = false;
         this.mastersOfScrumApp.board.setActivePlayer(this);
+    },
+    qaPlayerCollide: function(qaSprite, playerSprite){
+        var qaObj = _.find(this.mastersOfScrumApp.board.players, function (player) {
+            return player.sprite === qaSprite;
+        });
+        if(qaObj.playerSettings.name === 'QA') {
+            var playerObj = _.find(this.mastersOfScrumApp.board.players, function (player) {
+                return player.sprite === playerSprite;
+            });
+            if (playerObj.playerSettings.moves != playerObj.playerSettings.maxMoves) {
+                playerObj.playerSettings.moves = playerObj.playerSettings.maxMoves;
+            }
+            console.log('qa refill!!');
+        }
     }
   };
 
