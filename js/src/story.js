@@ -8,6 +8,7 @@ define(['lodash', 'connection'], function(_, Connection){
         this.connectionContext = this.mastersOfScrumApp.gameInstance.add.graphics();
 
         this.difficulty = difficulty;
+        this.maxDifficulty = difficulty;
 
         this.connections = [];
 
@@ -46,9 +47,13 @@ define(['lodash', 'connection'], function(_, Connection){
             .to({x: 1.2, y: 1.2}, 150, Phaser.Easing.Linear.None)
             .to({x:1, y:1}, 500, Phaser.Easing.Linear.None);
         this.yellow=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
-            .to({tint: 0xffff00}, 3000, Phaser.Easing.Linear.None, false, 0, 50);
+            .to({tint: 0xffff00}, 3000, Phaser.Easing.Linear.None)
+            .to({tint: 0xffffff}, 3000, Phaser.Easing.Linear.None)
+            .loop();
         this.green=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
-            .to({tint: 0x00ff00}, 3000, Phaser.Easing.Linear.None, false, 0, 50);
+            .to({tint: 0x00ff00}, 3000, Phaser.Easing.Linear.None)
+            .to({tint: 0xffffff}, 3000, Phaser.Easing.Linear.None)
+            .loop();
 
     };
 
@@ -131,7 +136,7 @@ define(['lodash', 'connection'], function(_, Connection){
             }, this);
             //Tween player onto story card
             playerObj.activeStory = this;
-            playerObj.isActive = false;
+            this.mastersOfScrumApp.board.setActivePlayer(null);
             playerObj.sprite.bringToTop();
             playerObj.avatarSprite.bringToTop();
             this.mastersOfScrumApp.playerTween = this.mastersOfScrumApp.gameInstance.add.tween(playerObj.sprite);

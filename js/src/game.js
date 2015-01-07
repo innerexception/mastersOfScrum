@@ -71,6 +71,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.gameInstance.load.image('smoke', 'res/sprite/smoke.png');
         MastersOfScrumApp.gameInstance.load.image('hourglass', 'res/sprite/hourglass.png');
         MastersOfScrumApp.gameInstance.load.image('gripper', 'res/sprite/smoke.png');
+        MastersOfScrumApp.gameInstance.load.image('activeCursor', 'res/sprite/activeCursor.png');
 
         //MastersOfScrumApp.gameInstance.load.spritesheet('torso', 'res/img/torso2.png', 32, 32);
         //  Load the Google WebFont Loader script
@@ -84,8 +85,6 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
         //Base sprite
         MastersOfScrumApp.groundSprite = MastersOfScrumApp.gameInstance.add.sprite(0,0, 'board');
-        MastersOfScrumApp.groundSprite.inputEnabled = true;
-        MastersOfScrumApp.groundSprite.events.onInputDown.add(MastersOfScrumApp.unlockCamera, this);
 
         //Keyboard init
         MastersOfScrumApp.cursors = MastersOfScrumApp.gameInstance.input.keyboard.createCursorKeys();
@@ -103,23 +102,28 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //MastersOfScrumApp.groundSprite.tilePosition.x = -MastersOfScrumApp.gameInstance.camera.x;
         //MastersOfScrumApp.groundSprite.tilePosition.y = -MastersOfScrumApp.gameInstance.camera.y;
 
-        if(!MastersOfScrumApp.gameInstance.camera.target){
-            //Mouse moves camera if not following something
-            var pointerPosition = MastersOfScrumApp.gameInstance.input.mousePointer.position;
-            var camera = MastersOfScrumApp.gameInstance.camera;
-            if(pointerPosition.x >= 700 && camera.x <= 1000){
-                camera.x+=5;
-            }
-            if(pointerPosition.y >= 500 && camera.y <= 1000){
-                camera.y+=5;
-            }
-            if(pointerPosition.x < 20 && camera.x > 0){
-                camera.x-=5;
-            }
-            if(pointerPosition.y < 20 && camera.y > 0){
-                camera.y-=5;
-            }
+        //Mouse moves camera if not following something
+        var pointerPosition = MastersOfScrumApp.gameInstance.input.mousePointer.position;
+        var camera = MastersOfScrumApp.gameInstance.camera;
+        var cameraLocked = MastersOfScrumApp.gameInstance.camera.target;
+
+        if(pointerPosition.x >= 775 && camera.x <= 1000){
+            if(cameraLocked) MastersOfScrumApp.unlockCamera();
+            camera.x+=5;
         }
+        if(pointerPosition.y >= 575 && camera.y <= 1000){
+            if(cameraLocked) MastersOfScrumApp.unlockCamera();
+            camera.y+=5;
+        }
+        if(pointerPosition.x < 25 && camera.x > 0){
+            if(cameraLocked) MastersOfScrumApp.unlockCamera();
+            camera.x-=5;
+        }
+        if(pointerPosition.y < 25 && camera.y > 0){
+            if(cameraLocked) MastersOfScrumApp.unlockCamera();
+            camera.y-=5;
+        }
+
 
     };
 
@@ -151,7 +155,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //Init new game session
 
         //Object
-        MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2, 5);
+        MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2, 5, 5);
     };
 
     return MastersOfScrumApp;

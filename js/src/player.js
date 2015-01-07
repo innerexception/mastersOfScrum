@@ -73,6 +73,10 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
             this.sprite.rotation = this.mastersOfScrumApp.gameInstance.physics.arcade.angleToPointer(this.sprite);
 
+            this.mastersOfScrumApp.board.activeCursorSprite.x = this.sprite.x;
+            this.mastersOfScrumApp.board.activeCursorSprite.y = this.sprite.y;
+            this.mastersOfScrumApp.board.activeCursorSprite.rotation = this.sprite.rotation;
+
             if(this.playerSettings.moves > 0) {
                 //if(this.mastersOfScrumApp.cursors.left.isDown){
                 //    this.sprite.angle -=4;
