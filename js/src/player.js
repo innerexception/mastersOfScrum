@@ -31,7 +31,8 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.avatarSprite.anchor.set(0.5);
         //Angle == rotation
         this.avatarSprite.angle = this.sprite.angle;
-
+        this.avatarSprite.inputEnabled = true;
+        this.avatarSprite.events.onInputDown.add(this.playerClicked, this);
         //
         ////dishes
         //this.dishes = mastersOfScrumApp.gameInstance.add.group();
@@ -54,8 +55,6 @@ define(['phaser', 'lodash'], function(Phaser, _){
         //	The 3000 value is the lifespan of each particle before it's killed
         //this.moveEmitter.start(false, 3000, 1000);
 
-        this.sprite.inputEnabled = true;
-        this.sprite.events.onInputDown.add(this.playerClicked, this);
   };
 
   Player.prototype = {
@@ -78,18 +77,11 @@ define(['phaser', 'lodash'], function(Phaser, _){
             this.mastersOfScrumApp.board.activeCursorSprite.rotation = this.sprite.rotation;
 
             if(this.playerSettings.moves > 0) {
-                //if(this.mastersOfScrumApp.cursors.left.isDown){
-                //    this.sprite.angle -=4;
-                //}
-                //else if(this.mastersOfScrumApp.cursors.right.isDown){
-                //    this.sprite.angle +=4;
-                //}
-
                 if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){
                     this.speed = 150;
-                    this.sprite.animations.play('walk', 10);
                     this.playerSettings.moves -= 0.1;
                     this.mastersOfScrumApp.gameInstance.physics.arcade.velocityFromRotation(this.sprite.rotation, this.speed, this.sprite.body.velocity);
+                    this.sprite.scale.x = (this.playerSettings.moves / this.playerSettings.maxMoves) * (this.playerSettings.maxMoves / 25);
                     if(!this.moveEmitter.on) {
                         this.moveEmitter.start(false, 3000, 250);
                     }
@@ -108,6 +100,14 @@ define(['phaser', 'lodash'], function(Phaser, _){
             if(this.moveEmitter.on){
                 this.moveEmitter.on = false;
             }
+        }
+
+
+        if(this.playerSettings.moves > 0) {
+            this.sprite.scale.x = (this.playerSettings.moves / this.playerSettings.maxMoves) * (this.playerSettings.maxMoves / 25);
+        }
+        else{
+            this.sprite.scale.x = 0.0000001;
         }
 
         if(this.speed > 0){

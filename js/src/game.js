@@ -123,8 +123,6 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
             if(cameraLocked) MastersOfScrumApp.unlockCamera();
             camera.y-=5;
         }
-
-
     };
 
     MastersOfScrumApp.render = function(){

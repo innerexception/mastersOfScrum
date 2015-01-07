@@ -1,17 +1,6 @@
 define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], function(_, Player, PlayerTypes, Story, StoryTypes){
     var Board = function(MastersOfScrumApp, rows, columns, gameLength, targetPoints){
         this.mastersOfScrumApp = MastersOfScrumApp;
-        this.bugs = [];
-        this.stories = [];
-        this.qaPlayer = new Player(MastersOfScrumApp, PlayerTypes.QA, 'userA');
-        this.redPlayer = new Player(MastersOfScrumApp, PlayerTypes.BackendDev, 'userB');
-        this.yellowPlayer = new Player(MastersOfScrumApp, PlayerTypes.ServiceDev, 'userC');
-        this.bluePlayer = new Player(MastersOfScrumApp, PlayerTypes.UX, 'userD');
-        this.scrumMaster = new Player(MastersOfScrumApp, PlayerTypes.ScrumMaster, 'userE');
-        this.players = [this.qaPlayer, this.redPlayer, this.yellowPlayer, this.bluePlayer, this.scrumMaster];
-        this.gameLength = gameLength;
-        this.maxGameLength = gameLength;
-        this.targetPoints = targetPoints;
 
         //Sprites
         this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(400, 10, 'hourglass');
@@ -25,6 +14,18 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             .to({x:1, y:1}, 1000, Phaser.Easing.Linear.None)
             .loop();
         this.activeCursorSprite.bounce.start();
+
+        this.bugs = [];
+        this.stories = [];
+        this.qaPlayer = new Player(MastersOfScrumApp, PlayerTypes.QA, 'userA');
+        this.redPlayer = new Player(MastersOfScrumApp, PlayerTypes.BackendDev, 'userB');
+        this.yellowPlayer = new Player(MastersOfScrumApp, PlayerTypes.ServiceDev, 'userC');
+        this.bluePlayer = new Player(MastersOfScrumApp, PlayerTypes.UX, 'userD');
+        this.scrumMaster = new Player(MastersOfScrumApp, PlayerTypes.ScrumMaster, 'userE');
+        this.players = [this.qaPlayer, this.redPlayer, this.yellowPlayer, this.bluePlayer, this.scrumMaster];
+        this.gameLength = gameLength;
+        this.maxGameLength = gameLength;
+        this.targetPoints = targetPoints;
 
         //Turn tracker
         this.turnText = MastersOfScrumApp.gameInstance.add.text(800, 20, this.getTurnString());
@@ -101,7 +102,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                     }
                     return result;
                 }, 0, this);
-                if(playerReductionTotal)
+                if(playerReductionTotal && story.difficulty != 0)
                     story.setDifficulty(story.difficulty -= playerReductionTotal);
             }, this);
             //random event
@@ -109,8 +110,8 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             this.setActivePlayer(this.players[0]);
             //reset character stats
             _.each(this.players, function(player){
-                player.moves = player.maxMoves;
-                player.stress = player.maxStress;
+                player.playerSettings.moves = player.playerSettings.maxMoves;
+                player.playerSettings.stress = player.playerSettings.maxStress;
             });
             //decrement turns
             this.gameLength--;
