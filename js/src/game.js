@@ -119,6 +119,9 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
             MastersOfScrumApp.inGame = true;
         }, this);
 
+        MastersOfScrumApp.gripperContext = MastersOfScrumApp.gameInstance.add.graphics();
+        MastersOfScrumApp.connectionContext = MastersOfScrumApp.gameInstance.add.graphics();
+
         //Keyboard init
         //MastersOfScrumApp.cursors = MastersOfScrumApp.gameInstance.input.keyboard.createCursorKeys();
 
@@ -208,9 +211,6 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
         victoryText.font = 'Press Start 2P';
         victoryText.fontSize = 48;
-        //var grd = victoryText.context.createLinearGradient(0, 0, 0, 100);
-        //grd.addColorStop(0, '#8ED6FF');
-        //grd.addColorStop(1, '#004CB3');
         victoryText.fill = '#FFFFFF';
         victoryText.align = 'center';
         victoryText.stroke = '#000000';
@@ -237,9 +237,6 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
         victoryText.font = 'Press Start 2P';
         victoryText.fontSize = 48;
-        //var grd = victoryText.context.createLinearGradient(0, 0, 0, 100);
-        //grd.addColorStop(0, '#8ED6FF');
-        //grd.addColorStop(1, '#004CB3');
         victoryText.fill = '#FFFFFF';
         victoryText.align = 'center';
         victoryText.stroke = '#000000';
@@ -250,6 +247,35 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         victoryText.bounce.to({ y: MastersOfScrumApp.gameInstance.world.height/2 }, 3000, Phaser.Easing.Linear.None);
         victoryText.bounce.onComplete.addOnce(function(){window.document.location.reload();});
         victoryText.bounce.start();
+    };
+
+    MastersOfScrumApp.drawTooltip = function(x, y, text){
+        if(!MastersOfScrumApp.tooltip){
+            MastersOfScrumApp.tooltip = MastersOfScrumApp.gameInstance.add.text(x, y, text);
+            MastersOfScrumApp.tooltip.anchor.setTo(0.5);
+            MastersOfScrumApp.tooltip.wordWrap = true;
+            MastersOfScrumApp.tooltip.wordWrapWidth = 100;
+            MastersOfScrumApp.tooltip.font = 'Press Start 2P';
+            MastersOfScrumApp.tooltip.fontSize = 8;
+            MastersOfScrumApp.tooltip.fill = '#FFFFFF';
+            MastersOfScrumApp.tooltip.align = 'center';
+            MastersOfScrumApp.tooltip.stroke = '#000000';
+            MastersOfScrumApp.tooltip.strokeThickness = 2;
+            MastersOfScrumApp.tooltip.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+
+            MastersOfScrumApp.tooltip.bounce=MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.tooltip.scale)
+                .to({ x:1.1, y:1.1 }, 500, Phaser.Easing.Linear.None)
+                .to({ x:1, y:1}, 500, Phaser.Easing.Linear.None)
+                .loop();
+            MastersOfScrumApp.tooltip.bounce.start();
+        }
+    };
+
+    MastersOfScrumApp.killTooltip = function(){
+        if(MastersOfScrumApp.tooltip){
+            MastersOfScrumApp.tooltip.destroy();
+            delete MastersOfScrumApp.tooltip;
+        }
     };
 
     return MastersOfScrumApp;

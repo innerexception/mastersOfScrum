@@ -6,9 +6,6 @@ define(['lodash', 'connection'], function(_, Connection){
 
         this.mastersOfScrumApp = mastersOfScrumApp;
 
-        this.gripperContext = this.mastersOfScrumApp.gameInstance.add.graphics();
-        this.connectionContext = this.mastersOfScrumApp.gameInstance.add.graphics();
-
         this.difficulty = difficulty;
         this.maxDifficulty = difficulty;
 
@@ -63,7 +60,7 @@ define(['lodash', 'connection'], function(_, Connection){
                 this.drawLine(this.handle1.x,
                     this.handle1.y,
                     this.handle2.x,
-                    this.handle2.y, this.gripperContext, true);
+                    this.handle2.y, this.mastersOfScrumApp.gripperContext, true);
 
                 _.each(this.mastersOfScrumApp.board.stories, function(story){
                     this.mastersOfScrumApp.gameInstance.physics.arcade.overlap(
@@ -76,7 +73,7 @@ define(['lodash', 'connection'], function(_, Connection){
             }
             //this.sprite.x+(this.sprite.width/2), this.sprite.y
             _.each(this.connections, function(connection){
-                this.drawLine(connection.sourceStory.sprite.x, connection.sourceStory.sprite.y, connection.targetStory.sprite.x, connection.targetStory.sprite.y, this.connectionContext);
+                this.drawLine(connection.sourceStory.sprite.x, connection.sourceStory.sprite.y, connection.targetStory.sprite.x, connection.targetStory.sprite.y, this.mastersOfScrumApp.connectionContext);
             }, this);
 
         },
@@ -134,21 +131,54 @@ define(['lodash', 'connection'], function(_, Connection){
                 return player.sprite === playerSprite;
             });
             console.log('story collide!' + playerObj.playerSettings.name);
+            //Check if too many players
             //Move players already on card over
             var existingPlayers = _.filter(this.mastersOfScrumApp.board.players, function(player){
                 return player.activeStory === this;
             }, this);
-            _.each(existingPlayers, function(player){
-                var tempTween = this.mastersOfScrumApp.gameInstance.add.tween(player.sprite);
-                tempTween.to({x:this.sprite.x-64, angle:0}, 1000, Phaser.Easing.Bounce.Out);
-                tempTween.start();
-            }, this);
-            //Tween player onto story card
-            //Only devs can have active stories
-            if(playerObj.playerSettings.name.indexOf('Dev') > 0) playerObj.activeStory = this;
 
-            //Scrum master can never dock with cards
-            if(playerObj.playerSettings.name!='SCRUM'){
+            var that = this;
+            var tweenPlayer = false;
+            if(playerObj.playerSettings.name==='SCRUM'){
+                this.mastersOfScrumApp.drawTooltip(playerObj.avatarSprite.x, playerObj.avatarSprite.y+35, 'SCRUM master dont work on cards son!');
+                window.setTimeout(function(){
+                    that.mastersOfScrumApp.killTooltip();
+                }, 3000);
+            }
+            else if(playerObj.playerSettings.name==='QA' && this.difficulty != 0) {
+                this.mastersOfScrumApp.drawTooltip(playerObj.avatarSprite.x, playerObj.avatarSprite.y+35, 'This card is not ready for QA!');
+                window.setTimeout(function(){
+                    that.mastersOfScrumApp.killTooltip();
+                }, 3000);
+            }
+            else if(playerObj.playerSettings.name === 'QA' && this.difficulty === 0){
+                tweenPlayer = true;
+                if(!this.handle2){
+                    //Set to green, enter path laying mode
+                    //this.yellow.pause();
+                    //this.green.start();
+                    this.startPathBuilder();
+                }
+            }
+            else if(existingPlayers.length < 2){
+                //Only devs can have active stories
+                playerObj.activeStory = this;
+                tweenPlayer = true;
+            }
+            else if(existingPlayers.length >= 2){
+                this.mastersOfScrumApp.drawTooltip(playerObj.avatarSprite.x, playerObj.avatarSprite.y+35, 'Too many people on this card!');
+                window.setTimeout(function(){
+                    that.mastersOfScrumApp.killTooltip();
+                }, 3000);
+            }
+
+            if(tweenPlayer){
+                //Tween player onto story card
+                _.each(existingPlayers, function(player){
+                    var tempTween = this.mastersOfScrumApp.gameInstance.add.tween(player.sprite);
+                    tempTween.to({x:this.sprite.x-(32+(existingPlayers.length*10)), angle:0}, 1000, Phaser.Easing.Bounce.Out);
+                    tempTween.start();
+                }, this);
                 this.mastersOfScrumApp.board.setActivePlayer(null);
                 playerObj.sprite.bringToTop();
                 playerObj.avatarSprite.bringToTop();
@@ -157,16 +187,8 @@ define(['lodash', 'connection'], function(_, Connection){
                 this.mastersOfScrumApp.playerTween.start();
 
                 this.bounce.start();
-
-                if(playerObj.playerSettings.name === 'QA' && this.difficulty === 0) {
-                    //Set to green, enter path laying mode
-                    //this.yellow.pause();
-                    //this.green.start();
-                    if(!this.handle2){
-                        this.startPathBuilder();
-                    }
-                }
             }
+
         },
         startPathBuilder: function(){
             this.handle1 = this.mastersOfScrumApp.gameInstance.add.sprite(this.sprite.x+(this.sprite.width/2), this.sprite.y, 'gripper');
@@ -185,18 +207,17 @@ define(['lodash', 'connection'], function(_, Connection){
             delete this.handle1;
             this.handle2.destroy();
             delete this.handle2;
-            this.gripperContext.clear();
+            this.mastersOfScrumApp.gripperContext.clear();
         },
         drawLine: function(x1, y1, x2, y2, context, clear){
             if(clear) context.clear();
-            context.beginFill(0x000000);
-            context.lineStyle(3, 0x00FF00);
+            context.lineStyle(3, 0xff0000, 0.5);
             context.moveTo(x1, y1);
             context.lineTo(x2, y2);
         },
         destroy: function(){
-            this.gripperContext.destroy();
-            this.connectionContext.destroy();
+            this.mastersOfScrumApp.gripperContext.destroy();
+            this.mastersOfScrumApp.connectionContext.destroy();
             //Graphicx
             this.sprite.destroy();
             this.difficultyText.destroy();

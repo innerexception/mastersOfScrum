@@ -4,7 +4,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
       
         this.mastersOfScrumApp = mastersOfScrumApp;
 
-        //Datas
+      //Datas
         this.playerSettings = mosPlayerType;
         this.isTweening = false;
         this.isActive = false;
@@ -32,7 +32,10 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.avatarSprite.angle = this.sprite.angle;
         this.avatarSprite.inputEnabled = true;
         this.avatarSprite.events.onInputDown.add(this.playerClicked, this);
-        mastersOfScrumApp.gameInstance.physics.enable(this.avatarSprite, Phaser.Physics.ARCADE);
+        this.avatarSprite.events.onInputOver.add(this.playerMouseOver, this);
+        this.avatarSprite.events.onInputOut.add(this.playerMouseOut, this);
+
+      mastersOfScrumApp.gameInstance.physics.enable(this.avatarSprite, Phaser.Physics.ARCADE);
         this.avatarSprite.body.immovable = false;
         this.avatarSprite.body.collideWorldBounds = true;
         this.avatarSprite.body.drag.set(100);
@@ -80,6 +83,12 @@ define(['phaser', 'lodash'], function(Phaser, _){
             this.mastersOfScrumApp.runLoss();
         }
     },
+    playerMouseOver: function(){
+        this.mastersOfScrumApp.drawTooltip(this.avatarSprite.x, this.avatarSprite.y-25, this.playerSettings.name + ' Moves:' + Math.round(this.playerSettings.moves));
+    },
+    playerMouseOut: function(){
+        this.mastersOfScrumApp.killTooltip();
+    },
     update: function(){
         if(!this.isTweening && this.isActive && this.mastersOfScrumApp.board.isReady){
 
@@ -88,6 +97,14 @@ define(['phaser', 'lodash'], function(Phaser, _){
             this.mastersOfScrumApp.board.activeCursorSprite.x = this.sprite.x;
             this.mastersOfScrumApp.board.activeCursorSprite.y = this.sprite.y;
             this.mastersOfScrumApp.board.activeCursorSprite.rotation = this.sprite.rotation;
+
+            this.mastersOfScrumApp.board.arrowSprite.rotation = this.sprite.rotation;
+            this.mastersOfScrumApp.board.arrowSprite.x = this.sprite.x;
+            this.mastersOfScrumApp.board.arrowSprite.y = this.sprite.y;
+            var distancePointer = this.mastersOfScrumApp.gameInstance.physics.arcade.distanceToPointer(this.sprite);
+            this.mastersOfScrumApp.board.arrowSprite.scale.x = (distancePointer/100)/4;
+            this.mastersOfScrumApp.board.arrowSprite.scale.y = (distancePointer/100)/4;
+
 
             if(this.playerSettings.moves > 0) {
                 if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){

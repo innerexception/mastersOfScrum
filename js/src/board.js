@@ -3,12 +3,31 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.mastersOfScrumApp = MastersOfScrumApp;
 
         //Sprites
-        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(-15, 30, 'hourglass');
+        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(-15, 60, 'hourglass');
         this.endTurnSprite.inputEnabled = true;
+        this.endTurnSprite.anchor.setTo(0.5);
         this.endTurnSprite.events.onInputDown.add(this.endTurn, this);
+        this.endTurnSprite.events.onInputOver.add(this.endTurnMouseOver, this);
+        this.endTurnSprite.events.onInputOut.add(this.endTurnMouseOut, this);
         this.endTurnSprite.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.endTurnSprite)
-            .to({ x: 15}, 2000, Phaser.Easing.Bounce.Out);
+            .to({ x: 50}, 2000, Phaser.Easing.Bounce.Out);
         this.endTurnSprite.bounce.start();
+
+        var bmp = this.mastersOfScrumApp.gameInstance.add.bitmapData(500, 500);
+        bmp.ctx.beginPath();
+        bmp.ctx.lineWidth = '3';
+        bmp.ctx.strokeStyle = 'white';
+        bmp.ctx.setLineDash([2,3]);
+        bmp.ctx.moveTo(250,250);
+        bmp.ctx.lineTo(500,250);
+        bmp.ctx.moveTo(380,280);
+        bmp.ctx.lineTo(500,250);
+        bmp.ctx.moveTo(380,220);
+        bmp.ctx.lineTo(500,250);
+        bmp.ctx.stroke();
+        bmp.ctx.closePath();
+        this.arrowSprite = this.mastersOfScrumApp.gameInstance.add.sprite(-100, -100, bmp);
+        this.arrowSprite.anchor.setTo(0.5);
 
         this.activeCursorSprite = MastersOfScrumApp.gameInstance.add.sprite(-400, -10, 'activeCursor');
         this.activeCursorSprite.anchor.setTo(0.5);
@@ -150,15 +169,24 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             }, this);
             //random event
 
-            ////reset character stats
-            //_.each(this.players, function(player){
-            //    player.playerSettings.moves = player.playerSettings.maxMoves;
-            //    player.playerSettings.stress = player.playerSettings.maxStress;
-            //});
+            //reset character stats
+            this.scrumMaster.playerSettings.moves = this.scrumMaster.playerSettings.maxMoves;
 
             //decrement turns
             this.gameLength--;
             this.turnText.text = this.getTurnString();
+        },
+        endTurnMouseOver: function(){
+            this.endTurnSprite.mouseBump=this.mastersOfScrumApp.gameInstance.add.tween(this.endTurnSprite.scale)
+                .to({x:1.2, y:1.2}, 100, Phaser.Easing.Linear.None);
+            this.endTurnSprite.mouseBump.start();
+            this.mastersOfScrumApp.drawTooltip(this.endTurnSprite.x, this.endTurnSprite.y-25, 'End the Day');
+        },
+        endTurnMouseOut: function(){
+            this.endTurnSprite.mouseBump=this.mastersOfScrumApp.gameInstance.add.tween(this.endTurnSprite.scale)
+                .to({x:1, y:1}, 100, Phaser.Easing.Linear.None);
+            this.endTurnSprite.mouseBump.start();
+            this.mastersOfScrumApp.killTooltip();
         },
         initTurnTracker: function(){
             //Turn tracker
@@ -179,6 +207,8 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             else{
                 this.mastersOfScrumApp.board.activeCursorSprite.x = -40;
                 this.mastersOfScrumApp.board.activeCursorSprite.y = -40;
+                this.mastersOfScrumApp.board.arrowSprite.scale.x = 0.0001;
+                this.mastersOfScrumApp.board.arrowSprite.scale.y = 0.0001;
                 this.mastersOfScrumApp.gameInstance.camera.unfollow();
             }
         },
