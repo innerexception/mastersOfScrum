@@ -24,9 +24,11 @@ define([], function(){
         maxMoves : 25,
         attack : 1,
         bugModifyer : 1,
+        bugChance: 20,
         storyBonus : 'blue',
         spritePath: 'bluePlayer',
-        startY: 275
+        startY: 275,
+        bugShots: 3
     };
 
     PlayerTypes.ServiceDev = {
@@ -37,9 +39,11 @@ define([], function(){
         maxMoves : 25,
         attack : 1,
         bugModifyer : 1,
+        bugChance: 10,
         storyBonus : 'yellow',
         spritePath: 'yellowPlayer',
-        startY: 350
+        startY: 350,
+        bugShots: 2
     };
 
     PlayerTypes.BackendDev = {
@@ -50,9 +54,11 @@ define([], function(){
         maxMoves : 25,
         attack : 1,
         bugModifyer : 1,
+        bugChance: 5,
         storyBonus : 'red',
         spritePath: 'greenPlayer',
-        startY: 425
+        startY: 425,
+        bugShots: 1
     };
 
     PlayerTypes.ScrumMaster = {

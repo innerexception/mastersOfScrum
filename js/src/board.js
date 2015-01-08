@@ -1,4 +1,4 @@
-define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], function(_, Player, PlayerTypes, Story, StoryTypes){
+define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], function(_, Player, PlayerTypes, Story, StoryTypes, Bug){
     var Board = function(MastersOfScrumApp, rows, columns, gameLength, targetPoints){
         this.mastersOfScrumApp = MastersOfScrumApp;
 
@@ -154,20 +154,24 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                     return this.mastersOfScrumApp.runLoss();
                 }
             }
-            //bug combat
 
             //reduce story values
             _.each(this.stories, function(story){
+                var playerMaxBugChance = 0;
                 var playerReductionTotal = _.reduce(this.players, function(result, player){
                     if(player.activeStory === story){
                         result += 2;
                     }
+                    if(player.playerSettings.bugChance)
+                        playerMaxBugChance = Math.max(player.playerSettings.bugChance, playerMaxBugChance);
                     return result;
                 }, 0, this);
                 if(playerReductionTotal && story.difficulty != 0)
                     story.setDifficulty(story.difficulty -= playerReductionTotal);
+                //bug spawns
+                if(Math.round((Math.random()*100)) < playerMaxBugChance) this.bugs.push(new Bug(this.mastersOfScrumApp));
             }, this);
-            //random event
+            //random events
 
             //reset character stats
             this.scrumMaster.playerSettings.moves = this.scrumMaster.playerSettings.maxMoves;
@@ -202,6 +206,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             });
             if(playerObj){
                 playerObj.isActive = true;
+                this.mastersOfScrumApp.activePlayer = playerObj;
                 this.mastersOfScrumApp.gameInstance.camera.follow(playerObj.sprite);
             }
             else{

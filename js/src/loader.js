@@ -7,6 +7,7 @@ require.config({
         'mosPlayerTypes': 'src/mosPlayerTypes',
         'connection': 'src/connection',
         'story': 'src/story',
+        'bug': 'src/bug',
         'mosStoryTypes': 'src/mosStoryTypes',
         'board': 'src/board',
         'lodash': 'lib/lodash.min'

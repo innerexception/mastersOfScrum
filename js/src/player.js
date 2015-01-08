@@ -42,11 +42,12 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.avatarSprite.body.maxVelocity.setTo(400,400);
         //1 == full rebound on collision
         this.avatarSprite.body.bounce.setTo(0.05,0.05);
-        //
-        ////dishes
-        //this.dishes = mastersOfScrumApp.gameInstance.add.group();
-        //this.dishes.enableBody = true;
-        //this.dishes.physicsBodyType = Phaser.Physics.ARCADE;
+
+        //bug shots
+        this.bullets = mastersOfScrumApp.gameInstance.add.group();
+        this.bullets.enableBody = true;
+        this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
 
         this.sprite.bringToTop();
         this.avatarSprite.bringToTop();
@@ -75,13 +76,8 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
   Player.prototype = {
 
-    damaged: function(stress){
-        if(this.playerSettings.stress >0){
-            this.playerSettings.stress -= stress;
-        }
-        if(this.playerSettings.stress < 0){
-            this.mastersOfScrumApp.runLoss();
-        }
+    removeMoves: function(){
+        this.playerSettings.moves = 0;
     },
     playerMouseOver: function(){
         this.mastersOfScrumApp.drawTooltip(this.avatarSprite.x, this.avatarSprite.y-25, this.playerSettings.name + ' Moves:' + Math.round(this.playerSettings.moves));
