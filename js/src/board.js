@@ -3,7 +3,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.mastersOfScrumApp = MastersOfScrumApp;
 
         //Sprites
-        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(400, 10, 'hourglass');
+        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(20, 10, 'hourglass');
         this.endTurnSprite.inputEnabled = true;
         this.endTurnSprite.events.onInputDown.add(this.endTurn, this);
 
@@ -30,8 +30,10 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         //Stories
         //Run planning sequence
         this.planningText = this.getText(0, 180, 'PO: PLANNING BEGINS! (Click to Continue)');
+        this.planningText.wordWrap = true;
+        this.planningText.wordWrapWidth = 400;
         this.planningText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.planningText)
-            .to({ x: this.mastersOfScrumApp.gameInstance.world.width/2}, 2000, Phaser.Easing.Bounce.Out);
+            .to({ x: this.mastersOfScrumApp.gameInstance.world.width/2 - 50}, 2000, Phaser.Easing.Bounce.Out);
         this.planningText.inputEnabled = true;
         this.planningText.events.onInputDown.add(this.getNextText, this);
         this.planningText.bounce.start();
@@ -69,7 +71,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                     break;
                 case 4:
                     this.planningText.text = 'PO: HEAVEN OR HELL, LETS ROCK!';
-                    this.planningText.grow.to({x: 2, y: 2}, 500, Phaser.Easing.Bounce.Out)
+                    this.planningText.grow.to({x: 3, y: 3}, 500, Phaser.Easing.Bounce.Out)
                         .to({x:0.001, y:0.001}, 500, Phaser.Easing.Bounce.Out);
                     this.planningText.grow.start();
                     this.initTurnTracker();
@@ -156,7 +158,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         },
         initTurnTracker: function(){
             //Turn tracker
-            this.turnText = this.getText(800, 20, this.getTurnString());
+            this.turnText = this.getText(800, 40, this.getTurnString());
             this.turnText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.turnText);
             this.turnText.bounce.to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 }, 3000, Phaser.Easing.Bounce.Out);
             this.turnText.bounce.start();

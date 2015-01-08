@@ -45,8 +45,30 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.logo.fixedtoCamera = true;
 
         MastersOfScrumApp.logo.bounce=MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.logo);
-        MastersOfScrumApp.logo.bounce.to({ y: MastersOfScrumApp.gameInstance.world.height/4 }, 3000, Phaser.Easing.Bounce.Out);
+        MastersOfScrumApp.logo.bounce.to({ y: MastersOfScrumApp.gameInstance.world.height/4 }, 3500, Phaser.Easing.Linear.None);
         MastersOfScrumApp.logo.bounce.start();
+
+        MastersOfScrumApp.logoSub = MastersOfScrumApp.gameInstance.add.text(400, 40, "CLICK TO START");
+        MastersOfScrumApp.logoSub.anchor.setTo(0.5);
+
+        MastersOfScrumApp.logoSub.font = 'Press Start 2P';
+        MastersOfScrumApp.logoSub.fontSize = 14;
+
+//        //  x0, y0 - x1, y1
+//        var grd = text.context.createLinearGradient(0, 0, 0, text.canvas.height);
+//        grd.addColorStop(0, '#8ED6FF');
+//        grd.addColorStop(1, '#004CB3');
+        MastersOfScrumApp.logoSub.fill = '#FFFFFF';
+
+        MastersOfScrumApp.logoSub.align = 'center';
+        MastersOfScrumApp.logoSub.stroke = '#000000';
+        MastersOfScrumApp.logoSub.strokeThickness = 2;
+        MastersOfScrumApp.logoSub.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+        MastersOfScrumApp.logoSub.fixedtoCamera = false;
+
+        MastersOfScrumApp.logoSub.bounce=MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.logoSub);
+        MastersOfScrumApp.logoSub.bounce.to({ y: MastersOfScrumApp.gameInstance.world.height/3 }, 3500, Phaser.Easing.Linear.None);
+        MastersOfScrumApp.logoSub.bounce.start();
 
         //Start Intro
         MastersOfScrumApp.setUpIntro();
@@ -90,7 +112,10 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.groundSprite.alpha = 0;
         MastersOfScrumApp.groundSprite.fadeIn = MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.groundSprite)
             .to({alpha: 0.8}, 2000, Phaser.Easing.Linear.None);
-        MastersOfScrumApp.groundSprite.fadeIn.onComplete.addOnce(function(){MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2, 5, 5);}, this);
+        MastersOfScrumApp.groundSprite.fadeIn.onComplete.addOnce(function(){
+            MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2, 5, 5);
+            MastersOfScrumApp.inGame = true;
+        }, this);
 
         //Keyboard init
         MastersOfScrumApp.cursors = MastersOfScrumApp.gameInstance.input.keyboard.createCursorKeys();
@@ -109,25 +134,27 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //MastersOfScrumApp.groundSprite.tilePosition.y = -MastersOfScrumApp.gameInstance.camera.y;
 
         //Mouse moves camera if not following something
-        var pointerPosition = MastersOfScrumApp.gameInstance.input.mousePointer.position;
-        var camera = MastersOfScrumApp.gameInstance.camera;
-        var cameraLocked = MastersOfScrumApp.gameInstance.camera.target;
+        if(MastersOfScrumApp.inGame){
+            var pointerPosition = MastersOfScrumApp.gameInstance.input.mousePointer.position;
+            var camera = MastersOfScrumApp.gameInstance.camera;
+            var cameraLocked = MastersOfScrumApp.gameInstance.camera.target;
 
-        if(pointerPosition.x >= 775 && camera.x <= 1000){
-            if(cameraLocked) MastersOfScrumApp.unlockCamera();
-            camera.x+=5;
-        }
-        if(pointerPosition.y >= 575 && camera.y <= 1000){
-            if(cameraLocked) MastersOfScrumApp.unlockCamera();
-            camera.y+=5;
-        }
-        if(pointerPosition.x < 25 && camera.x > 0){
-            if(cameraLocked) MastersOfScrumApp.unlockCamera();
-            camera.x-=5;
-        }
-        if(pointerPosition.y < 25 && camera.y > 0){
-            if(cameraLocked) MastersOfScrumApp.unlockCamera();
-            camera.y-=5;
+            if(pointerPosition.x >= 775 && camera.x <= 1000){
+                if(cameraLocked) MastersOfScrumApp.unlockCamera();
+                camera.x+=5;
+            }
+            if(pointerPosition.y >= 575 && camera.y <= 1000){
+                if(cameraLocked) MastersOfScrumApp.unlockCamera();
+                camera.y+=5;
+            }
+            if(pointerPosition.x < 25 && camera.x > 0){
+                if(cameraLocked) MastersOfScrumApp.unlockCamera();
+                camera.x-=5;
+            }
+            if(pointerPosition.y < 25 && camera.y > 0){
+                if(cameraLocked) MastersOfScrumApp.unlockCamera();
+                camera.y-=5;
+            }
         }
     };
 
@@ -143,8 +170,11 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
     MastersOfScrumApp.removeLogo = function(){
         MastersOfScrumApp.gameInstance.input.onDown.remove(MastersOfScrumApp.removeLogo, this);
         MastersOfScrumApp.logo.flicker = MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.logo);
-        MastersOfScrumApp.logo.flicker.to({alpha:0}, 50, Phaser.Easing.Linear.None, true, 0, 50);
+        MastersOfScrumApp.logo.flicker.to({alpha:0}, 50, Phaser.Easing.Linear.None, true, 0, 40);
         MastersOfScrumApp.logo.flicker.start();
+        MastersOfScrumApp.logoSub.flicker = MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.logoSub);
+        MastersOfScrumApp.logoSub.flicker.to({alpha:0}, 50, Phaser.Easing.Linear.None, true, 0, 40);
+        MastersOfScrumApp.logoSub.flicker.start();
 
         MastersOfScrumApp.startNewRound();
     };

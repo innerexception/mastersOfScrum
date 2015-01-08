@@ -25,7 +25,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
         //1 == full rebound on collision
         this.sprite.body.bounce.setTo(0.05,0.05);
         //Angle == rotation
-        this.sprite.angle = mastersOfScrumApp.gameInstance.rnd.angle();
+        //this.sprite.angle = mastersOfScrumApp.gameInstance.rnd.angle();
 
         this.avatarSprite = mastersOfScrumApp.gameInstance.add.sprite(x,y,userAvatar);
         this.avatarSprite.anchor.set(0.5);

@@ -13,7 +13,7 @@ define([], function(){
         detectionModifyer: 2,
         bugModifyer : 0,
         spritePath: 'redPlayer',
-        startY: 100
+        startY: 200
     };
 
     PlayerTypes.UX = {
@@ -26,7 +26,7 @@ define([], function(){
         bugModifyer : 1,
         storyBonus : 'blue',
         spritePath: 'bluePlayer',
-        startY: 200
+        startY: 250
     };
 
     PlayerTypes.ServiceDev = {
@@ -52,7 +52,7 @@ define([], function(){
         bugModifyer : 1,
         storyBonus : 'red',
         spritePath: 'greenPlayer',
-        startY: 400
+        startY: 350
     };
 
     PlayerTypes.ScrumMaster = {
@@ -64,7 +64,7 @@ define([], function(){
         attack : 0,
         bugModifyer : 0,
         spritePath: 'babyBluePlayer',
-        startY: 500
+        startY: 400
     };
 
     return PlayerTypes;
