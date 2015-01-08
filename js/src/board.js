@@ -3,7 +3,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.mastersOfScrumApp = MastersOfScrumApp;
 
         //Sprites
-        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(20, 10, 'hourglass');
+        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(15, 30, 'hourglass');
         this.endTurnSprite.inputEnabled = true;
         this.endTurnSprite.events.onInputDown.add(this.endTurn, this);
 
@@ -31,9 +31,9 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         //Run planning sequence
         this.planningText = this.getText(0, 180, 'PO: PLANNING BEGINS! (Click to Continue)');
         this.planningText.wordWrap = true;
-        this.planningText.wordWrapWidth = 400;
+        this.planningText.wordWrapWidth = 500;
         this.planningText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.planningText)
-            .to({ x: this.mastersOfScrumApp.gameInstance.world.width/2 - 50}, 2000, Phaser.Easing.Bounce.Out);
+            .to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 - 50}, 2000, Phaser.Easing.Bounce.Out);
         this.planningText.inputEnabled = true;
         this.planningText.events.onInputDown.add(this.getNextText, this);
         this.planningText.bounce.start();
@@ -74,6 +74,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                     this.planningText.grow.to({x: 3, y: 3}, 500, Phaser.Easing.Bounce.Out)
                         .to({x:0.001, y:0.001}, 500, Phaser.Easing.Bounce.Out);
                     this.planningText.grow.start();
+                    this.isReady = true;
                     this.initTurnTracker();
                     break;
             }
@@ -133,6 +134,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                 }
             }
             //bug combat
+
             //reduce story values
             _.each(this.stories, function(story){
                 var playerReductionTotal = _.reduce(this.players, function(result, player){
@@ -145,22 +147,22 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                     story.setDifficulty(story.difficulty -= playerReductionTotal);
             }, this);
             //random event
-            //set first player to active
-            this.setActivePlayer(this.players[0]);
-            //reset character stats
-            _.each(this.players, function(player){
-                player.playerSettings.moves = player.playerSettings.maxMoves;
-                player.playerSettings.stress = player.playerSettings.maxStress;
-            });
+
+            ////reset character stats
+            //_.each(this.players, function(player){
+            //    player.playerSettings.moves = player.playerSettings.maxMoves;
+            //    player.playerSettings.stress = player.playerSettings.maxStress;
+            //});
+
             //decrement turns
             this.gameLength--;
             this.turnText.text = this.getTurnString();
         },
         initTurnTracker: function(){
             //Turn tracker
-            this.turnText = this.getText(800, 40, this.getTurnString());
+            this.turnText = this.getText(800, 60, this.getTurnString());
             this.turnText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.turnText);
-            this.turnText.bounce.to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 }, 3000, Phaser.Easing.Bounce.Out);
+            this.turnText.bounce.to({ x: this.mastersOfScrumApp.gameInstance.world.width/4 }, 3000, Phaser.Easing.Bounce.Out);
             this.turnText.bounce.start();
         },
         setActivePlayer: function(playerObj){

@@ -34,12 +34,12 @@ define(['lodash', 'connection'], function(_, Connection){
             .to({x: 1.2, y: 1.2}, 150, Phaser.Easing.Linear.None)
             .to({x:1, y:1}, 500, Phaser.Easing.Linear.None);
         this.yellow=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
-            .to({tint: 0xffff00}, 3000, Phaser.Easing.Linear.None)
-            .to({tint: 0xffffff}, 3000, Phaser.Easing.Linear.None)
+            .to({tint: 0xffff00}, 2000, Phaser.Easing.Linear.None)
+            .to({tint: 0xffffff}, 2000, Phaser.Easing.Linear.None)
             .loop();
         this.green=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
-            .to({tint: 0xffffff}, 3000, Phaser.Easing.Linear.None)
-            .to({tint: 0x00ff00}, 3000, Phaser.Easing.Linear.None)
+            .to({tint: 0xffffff}, 2000, Phaser.Easing.Linear.None)
+            .to({tint: 0x00ff00}, 2000, Phaser.Easing.Linear.None)
             .loop();
         this.fall=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
             .to({y: this.y}, 2000, Phaser.Easing.Bounce.Out);
@@ -59,9 +59,12 @@ define(['lodash', 'connection'], function(_, Connection){
             }, this);
 
             if(this.handle2){
-                this.handle2.x = this.mastersOfScrumApp.gameInstance.input.mousePointer.x;
-                this.handle2.y = this.mastersOfScrumApp.gameInstance.input.mousePointer.y;
-                this.drawLine(this.handle1.x, this.handle1.y, this.handle2.x, this.handle2.y, this.gripperContext, true);
+                this.handle2.x = this.mastersOfScrumApp.gameInstance.input.mousePointer.x+this.mastersOfScrumApp.gameInstance.camera.x;
+                this.handle2.y = this.mastersOfScrumApp.gameInstance.input.mousePointer.y+this.mastersOfScrumApp.gameInstance.camera.y;
+                this.drawLine(this.handle1.x,
+                    this.handle1.y,
+                    this.handle2.x,
+                    this.handle2.y, this.gripperContext, true);
 
                 _.each(this.mastersOfScrumApp.board.stories, function(story){
                     this.mastersOfScrumApp.gameInstance.physics.arcade.overlap(
@@ -156,8 +159,8 @@ define(['lodash', 'connection'], function(_, Connection){
 
                 if(playerObj.playerSettings.name === 'QA' && this.difficulty === 0) {
                     //Set to green, enter path laying mode
-                    this.yellow.pause();
-                    this.green.start();
+                    //this.yellow.pause();
+                    //this.green.start();
                     if(!this.handle2){
                         this.startPathBuilder();
                     }
@@ -175,7 +178,6 @@ define(['lodash', 'connection'], function(_, Connection){
             this.mastersOfScrumApp.gameInstance.physics.enable(this.handle2, Phaser.Physics.ARCADE);
             this.handle2.body.collideWorldBounds = true;
 
-            this.drawLine(this.handle1.x, this.handle1.y, this.handle2.x, this.handle2.y, this.gripperContext, true);
         },
         endPathBuilder: function(){
             this.handle1.destroy();

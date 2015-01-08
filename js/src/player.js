@@ -9,7 +9,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.isTweening = false;
         this.isActive = false;
         this.isAlive = true;
-        var x = 50;
+        var x = -50;
         var y = this.playerSettings.startY;//mastersOfScrumApp.gameInstance.world.height/2;
 
         //Graphicx
@@ -62,6 +62,13 @@ define(['phaser', 'lodash'], function(Phaser, _){
         //	The 3000 value is the lifespan of each particle before it's killed
         //this.moveEmitter.start(false, 3000, 1000);
 
+        this.sprite.fall=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
+          .to({x: 50}, 2000, Phaser.Easing.Bounce.Out);
+        this.sprite.fall.start();
+        this.avatarSprite.fall=this.mastersOfScrumApp.gameInstance.add.tween(this.avatarSprite)
+          .to({x: 50}, 2000, Phaser.Easing.Bounce.Out);
+        this.avatarSprite.fall.start();
+
   };
 
   Player.prototype = {
@@ -75,7 +82,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
         }
     },
     update: function(){
-        if(!this.isTweening && this.isActive){
+        if(!this.isTweening && this.isActive && this.mastersOfScrumApp.board.isReady){
 
             this.sprite.rotation = this.mastersOfScrumApp.gameInstance.physics.arcade.angleToPointer(this.sprite);
 
@@ -113,8 +120,8 @@ define(['phaser', 'lodash'], function(Phaser, _){
         _.each(this.mastersOfScrumApp.board.players, function(player){
             this.mastersOfScrumApp.gameInstance.physics.arcade.collide(
                 this.sprite,
-                player.sprite,
-                this.qaPlayerCollide,
+                player.avatarSprite,
+                this.scrumPlayerCollide,
                 null,
                 this);
         }, this);
@@ -147,18 +154,18 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.moveEmitter.visible = false;
         this.mastersOfScrumApp.board.setActivePlayer(this);
     },
-    qaPlayerCollide: function(qaSprite, playerSprite){
+    scrumPlayerCollide: function(scrumSprite, playerSprite){
         var qaObj = _.find(this.mastersOfScrumApp.board.players, function (player) {
-            return player.sprite === qaSprite;
+            return player.sprite === scrumSprite;
         });
-        if(qaObj.playerSettings.name === 'QA') {
+        if(qaObj.playerSettings.name === 'SCRUM') {
             var playerObj = _.find(this.mastersOfScrumApp.board.players, function (player) {
-                return player.sprite === playerSprite;
+                return player.avatarSprite === playerSprite;
             });
             if (playerObj.playerSettings.moves != playerObj.playerSettings.maxMoves) {
                 playerObj.playerSettings.moves = playerObj.playerSettings.maxMoves;
             }
-            console.log('qa refill!!');
+            console.log('scrum refill!!');
         }
     }
   };

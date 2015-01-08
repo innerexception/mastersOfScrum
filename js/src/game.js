@@ -103,7 +103,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
     MastersOfScrumApp.load = function(){
         //1st time load
-        MastersOfScrumApp.gameInstance.world.setBounds(0,0,1000,1000);
+        MastersOfScrumApp.gameInstance.world.setBounds(0,0,1600,600);
 
         //Base sprite
         MastersOfScrumApp.groundSprite = MastersOfScrumApp.gameInstance.add.sprite(0,0, 'board');
@@ -118,7 +118,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         }, this);
 
         //Keyboard init
-        MastersOfScrumApp.cursors = MastersOfScrumApp.gameInstance.input.keyboard.createCursorKeys();
+        //MastersOfScrumApp.cursors = MastersOfScrumApp.gameInstance.input.keyboard.createCursorKeys();
 
         //Camera init
         MastersOfScrumApp.gameInstance.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
@@ -190,6 +190,14 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
         //Object
         MastersOfScrumApp.groundSprite.fadeIn.start();
+
+    };
+
+    MastersOfScrumApp.runVictory = function(){
+
+    };
+
+    MastersOfScrumApp.runLoss = function(){
 
     };
 
