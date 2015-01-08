@@ -14,7 +14,6 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
         //Graphicx
         this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,y,this.playerSettings.spritePath);
-        this.sprite.animations.add('walk');
         //2D physics
         this.sprite.anchor.set(0.5);
         mastersOfScrumApp.gameInstance.physics.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -167,6 +166,15 @@ define(['phaser', 'lodash'], function(Phaser, _){
             }
             console.log('scrum refill!!');
         }
+    },
+    destroy: function(){
+
+        //Graphicx
+        this.sprite.destroy();
+        this.avatarSprite.destroy();
+
+        //stress
+        this.moveEmitter.destroy();
     }
   };
 

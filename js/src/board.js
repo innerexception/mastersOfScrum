@@ -3,9 +3,12 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.mastersOfScrumApp = MastersOfScrumApp;
 
         //Sprites
-        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(15, 30, 'hourglass');
+        this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(-15, 30, 'hourglass');
         this.endTurnSprite.inputEnabled = true;
         this.endTurnSprite.events.onInputDown.add(this.endTurn, this);
+        this.endTurnSprite.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.endTurnSprite)
+            .to({ x: 15}, 2000, Phaser.Easing.Bounce.Out);
+        this.endTurnSprite.bounce.start();
 
         this.activeCursorSprite = MastersOfScrumApp.gameInstance.add.sprite(-400, -10, 'activeCursor');
         this.activeCursorSprite.anchor.setTo(0.5);
@@ -122,7 +125,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             if(this.gameLength === 0){
                 var points = 0;
                 _.each(this.stories, function(story){
-                    story.connections.length > 0 ? points += story.maxDifficulty : points += 0;
+                    story.connections.length > 0 && story.difficulty === 0 ? points += story.maxDifficulty : points += 0;
                 }, this);
 
                 if(points >= this.targetPoints){
@@ -202,6 +205,28 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         },
         getTurnString: function(){
             return 'DAYS REMAINING IN SPRINT: ' + this.gameLength + ' / ' +this.maxGameLength;
+        },
+        destroy: function(){
+            this.mastersOfScrumApp = null;
+
+            //Sprites
+            this.endTurnSprite.destroy();
+            this.activeCursorSprite.destroy();
+            _.each(this.bugs, function(bug){
+                bug.destroy();
+            }, this);
+            _.each(this.stories, function(story){
+                story.destroy();
+            }, this);
+            this.qaPlayer.destroy();
+            this.redPlayer.destroy();
+            this.yellowPlayer.destroy();
+            this.bluePlayer.destroy();
+            this.scrumMaster.destroy();
+            this.players = null;
+
+            this.planningText.destroy();
+
         }
     };
 

@@ -15,12 +15,11 @@ define(['lodash', 'connection'], function(_, Connection){
         this.connections = [];
 
         //Graphicx
-        this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,-500,storyType.spritePath);
+        this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,-100,storyType.spritePath);
         //2D physics
         this.sprite.anchor.set(0.5);
         mastersOfScrumApp.gameInstance.physics.enable(this.sprite, Phaser.Physics.ARCADE);
         this.sprite.body.immovable = true;
-        this.sprite.body.collideWorldBounds = true;
 
         //Angle == rotation
         this.sprite.angle = 0;
@@ -44,7 +43,7 @@ define(['lodash', 'connection'], function(_, Connection){
         this.fall=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
             .to({y: this.y}, 2000, Phaser.Easing.Bounce.Out);
         this.fall.onComplete.addOnce(this.getDifficultyText, this);
-        this.fall.delay(Math.random()*1000).start();
+        this.fall.delay(Math.random()*2000).start();
     };
 
     Story.prototype = {
@@ -194,6 +193,13 @@ define(['lodash', 'connection'], function(_, Connection){
             context.lineStyle(3, 0x00FF00);
             context.moveTo(x1, y1);
             context.lineTo(x2, y2);
+        },
+        destroy: function(){
+            this.gripperContext.destroy();
+            this.connectionContext.destroy();
+            //Graphicx
+            this.sprite.destroy();
+            this.difficultyText.destroy();
         }
     };
 

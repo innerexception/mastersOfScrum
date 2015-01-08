@@ -219,13 +219,37 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
         victoryText.bounce=MastersOfScrumApp.gameInstance.add.tween(victoryText);
         victoryText.bounce.to({ y: MastersOfScrumApp.gameInstance.world.height/2 }, 3000, Phaser.Easing.Linear.None);
-        victoryText.bounce.onComplete.addOnce(function(){window.reload();});
+        victoryText.bounce.onComplete.addOnce(function(){window.document.location.reload();});
         victoryText.bounce.start();
 
     };
 
     MastersOfScrumApp.runLoss = function(){
 
+        MastersOfScrumApp.board.destroy();
+
+        MastersOfScrumApp.groundSprite.fadeOut = MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.groundSprite)
+            .to({alpha: 0}, 3000, Phaser.Easing.Linear.None);
+        MastersOfScrumApp.groundSprite.fadeOut.start();
+
+        var victoryText = MastersOfScrumApp.gameInstance.add.text(400, -20, "FAILED!");
+        victoryText.anchor.setTo(0.5);
+
+        victoryText.font = 'Press Start 2P';
+        victoryText.fontSize = 48;
+        //var grd = victoryText.context.createLinearGradient(0, 0, 0, 100);
+        //grd.addColorStop(0, '#8ED6FF');
+        //grd.addColorStop(1, '#004CB3');
+        victoryText.fill = '#FFFFFF';
+        victoryText.align = 'center';
+        victoryText.stroke = '#000000';
+        victoryText.strokeThickness = 2;
+        victoryText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+
+        victoryText.bounce=MastersOfScrumApp.gameInstance.add.tween(victoryText);
+        victoryText.bounce.to({ y: MastersOfScrumApp.gameInstance.world.height/2 }, 3000, Phaser.Easing.Linear.None);
+        victoryText.bounce.onComplete.addOnce(function(){window.document.location.reload();});
+        victoryText.bounce.start();
     };
 
     return MastersOfScrumApp;
