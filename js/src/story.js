@@ -123,7 +123,9 @@ define(['lodash', 'connection'], function(_, Connection){
             this.newConnection = new Connection(this, storyObj);
         },
         gripperStorySave: function(){
-            this.connections.push(new Connection(this.newConnection.sourceStory, this.newConnection.targetStory));
+            var newConnection = new Connection(this.newConnection.sourceStory, this.newConnection.targetStory);
+            this.connections.push(newConnection);
+            this.newConnection.targetStory.connections.push(newConnection);
             this.newConnection = null;
             this.endPathBuilder();
         },

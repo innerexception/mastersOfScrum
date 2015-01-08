@@ -29,11 +29,11 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
 
         //Stories
         //Run planning sequence
-        this.planningText = this.getText(0, 180, 'PO: PLANNING BEGINS! (Click to Continue)');
+        this.planningText = this.getText(0, 60, 'PO: PLANNING BEGINS! (Click to Continue)');
         this.planningText.wordWrap = true;
         this.planningText.wordWrapWidth = 500;
         this.planningText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.planningText)
-            .to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 - 50}, 2000, Phaser.Easing.Bounce.Out);
+            .to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 - 100}, 2000, Phaser.Easing.Bounce.Out);
         this.planningText.inputEnabled = true;
         this.planningText.events.onInputDown.add(this.getNextText, this);
         this.planningText.bounce.start();
@@ -64,7 +64,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                     this.planningText.grow.start();
                     break;
                 case 3:
-                    this.planningText.text = 'PO: YOUR VELOCITY SHOULD BE AT LEAST 12 POINTS THIS SPRINT.';
+                    this.planningText.text = 'PO: YOUR VELOCITY SHOULD BE AT LEAST '+this.targetPoints+' POINTS THIS SPRINT.';
                     this.planningText.grow.to({x: 1.2, y: 1.2}, 500, Phaser.Easing.Bounce.Out);
                     this.planningText.grow.start();
                     this.spawnStories();
@@ -73,9 +73,8 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
                     this.planningText.text = 'PO: HEAVEN OR HELL, LETS ROCK!';
                     this.planningText.grow.to({x: 3, y: 3}, 500, Phaser.Easing.Bounce.Out)
                         .to({x:0.001, y:0.001}, 500, Phaser.Easing.Bounce.Out);
+                    this.planningText.grow.onComplete.addOnce(this.initTurnTracker, this);
                     this.planningText.grow.start();
-                    this.isReady = true;
-                    this.initTurnTracker();
                     break;
             }
         },
@@ -164,6 +163,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             this.turnText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.turnText);
             this.turnText.bounce.to({ x: this.mastersOfScrumApp.gameInstance.world.width/4 }, 3000, Phaser.Easing.Bounce.Out);
             this.turnText.bounce.start();
+            this.isReady = true;
         },
         setActivePlayer: function(playerObj){
             _.each(this.players, function(player){

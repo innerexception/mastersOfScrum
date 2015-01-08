@@ -94,6 +94,8 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.gameInstance.load.image('hourglass', 'res/sprite/hourglass.png');
         MastersOfScrumApp.gameInstance.load.image('gripper', 'res/sprite/smoke.png');
         MastersOfScrumApp.gameInstance.load.image('activeCursor', 'res/sprite/activeCursor.png');
+        MastersOfScrumApp.gameInstance.load.image('moneyBag', 'res/sprite/moneybag.png');
+
 
         //MastersOfScrumApp.gameInstance.load.spritesheet('torso', 'res/img/torso2.png', 32, 32);
         //  Load the Google WebFont Loader script
@@ -194,6 +196,31 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
     };
 
     MastersOfScrumApp.runVictory = function(){
+        for(var i=0; i<200; i++){
+            var nextBag = MastersOfScrumApp.gameInstance.add.sprite(Math.random()*700,-50, 'moneyBag');
+            MastersOfScrumApp.gameInstance.physics.enable(nextBag, Phaser.Physics.ARCADE);
+            nextBag.fallIn = MastersOfScrumApp.gameInstance.add.tween(nextBag)
+                .to({y: Math.random()*1000}, 2000, Phaser.Easing.Bounce.Out);
+            nextBag.fallIn.delay(Math.random()*500).start();
+        }
+        var victoryText = MastersOfScrumApp.gameInstance.add.text(400, -20, "VICTORY!");
+        victoryText.anchor.setTo(0.5);
+
+        victoryText.font = 'Press Start 2P';
+        victoryText.fontSize = 48;
+        //var grd = victoryText.context.createLinearGradient(0, 0, 0, 100);
+        //grd.addColorStop(0, '#8ED6FF');
+        //grd.addColorStop(1, '#004CB3');
+        victoryText.fill = '#FFFFFF';
+        victoryText.align = 'center';
+        victoryText.stroke = '#000000';
+        victoryText.strokeThickness = 2;
+        victoryText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+
+        victoryText.bounce=MastersOfScrumApp.gameInstance.add.tween(victoryText);
+        victoryText.bounce.to({ y: MastersOfScrumApp.gameInstance.world.height/2 }, 3000, Phaser.Easing.Linear.None);
+        victoryText.bounce.onComplete.addOnce(function(){window.reload();});
+        victoryText.bounce.start();
 
     };
 
