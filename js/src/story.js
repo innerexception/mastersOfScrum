@@ -1,6 +1,8 @@
 define(['lodash', 'connection'], function(_, Connection){
     var Story = function(mastersOfScrumApp, storyType, difficulty, x, y){
 
+        this.x = x;
+        this.y = y;
 
         this.mastersOfScrumApp = mastersOfScrumApp;
 
@@ -13,9 +15,7 @@ define(['lodash', 'connection'], function(_, Connection){
         this.connections = [];
 
         //Graphicx
-        this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,y,storyType.spritePath);
-        this.sprite.animations.add('sparkle');
-
+        this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,-500,storyType.spritePath);
         //2D physics
         this.sprite.anchor.set(0.5);
         mastersOfScrumApp.gameInstance.physics.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -25,20 +25,7 @@ define(['lodash', 'connection'], function(_, Connection){
         //Angle == rotation
         this.sprite.angle = 0;
 
-        this.difficultyText = this.mastersOfScrumApp.gameInstance.add.text(this.sprite.x+(this.sprite.width/2)-15, this.sprite.y+(this.sprite.height/2)-15, this.difficulty);
-        this.difficultyText.anchor.setTo(0.5);
-        this.difficultyText.font = 'Press Start 2P';
-        this.difficultyText.fontSize = 12;
-        this.difficultyText.fill = '#FFFFFF';
-        this.difficultyText.align = 'center';
-        this.difficultyText.stroke = '#000000';
-        this.difficultyText.strokeThickness = 2;
-        this.difficultyText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
-        this.difficultyText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.difficultyText)
-            .to({ fontSize: 24 }, 1000, Phaser.Easing.Linear.None)
-            .to({ fontSize: 12 }, 1000, Phaser.Easing.Bounce.Out);
-        this.difficultyText.bounce.start();
-
+        //Tweens
         this.spin=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
             .to({angle: 30}, 150, Phaser.Easing.Linear.None)
             .to({angle: -30}, 150, Phaser.Easing.Linear.None)
@@ -54,7 +41,10 @@ define(['lodash', 'connection'], function(_, Connection){
             .to({tint: 0xffffff}, 3000, Phaser.Easing.Linear.None)
             .to({tint: 0x00ff00}, 3000, Phaser.Easing.Linear.None)
             .loop();
-
+        this.fall=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite)
+            .to({y: this.y}, 2000, Phaser.Easing.Bounce.Out);
+        this.fall.onComplete.addOnce(this.getDifficultyText, this);
+        this.fall.delay(Math.random()*1000).start();
     };
 
     Story.prototype = {
@@ -87,6 +77,21 @@ define(['lodash', 'connection'], function(_, Connection){
                 this.drawLine(connection.sourceStory.sprite.x, connection.sourceStory.sprite.y, connection.targetStory.sprite.x, connection.targetStory.sprite.y, this.connectionContext);
             }, this);
 
+        },
+        getDifficultyText: function(){
+            this.difficultyText = this.mastersOfScrumApp.gameInstance.add.text(this.sprite.x+(this.sprite.width/2)-15, this.sprite.y+(this.sprite.height/2)-15, this.difficulty);
+            this.difficultyText.anchor.setTo(0.5);
+            this.difficultyText.font = 'Press Start 2P';
+            this.difficultyText.fontSize = 12;
+            this.difficultyText.fill = '#FFFFFF';
+            this.difficultyText.align = 'center';
+            this.difficultyText.stroke = '#000000';
+            this.difficultyText.strokeThickness = 2;
+            this.difficultyText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+            this.difficultyText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.difficultyText)
+                .to({ fontSize: 24 }, 1000, Phaser.Easing.Linear.None)
+                .to({ fontSize: 12 }, 1000, Phaser.Easing.Bounce.Out);
+            this.difficultyText.bounce.start();
         },
         setDifficulty: function(value){
             //Render current difficulty value
@@ -151,7 +156,7 @@ define(['lodash', 'connection'], function(_, Connection){
 
                 if(playerObj.playerSettings.name === 'QA' && this.difficulty === 0) {
                     //Set to green, enter path laying mode
-                    this.yellow.stop();
+                    this.yellow.pause();
                     this.green.start();
                     if(!this.handle2){
                         this.startPathBuilder();

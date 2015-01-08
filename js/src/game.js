@@ -85,6 +85,12 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
 
         //Base sprite
         MastersOfScrumApp.groundSprite = MastersOfScrumApp.gameInstance.add.sprite(0,0, 'board');
+        MastersOfScrumApp.groundSprite.scale.x = 1.5;
+        MastersOfScrumApp.groundSprite.scale.y = 1.5;
+        MastersOfScrumApp.groundSprite.alpha = 0;
+        MastersOfScrumApp.groundSprite.fadeIn = MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.groundSprite)
+            .to({alpha: 0.8}, 2000, Phaser.Easing.Linear.None);
+        MastersOfScrumApp.groundSprite.fadeIn.onComplete.addOnce(function(){MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2, 5, 5);}, this);
 
         //Keyboard init
         MastersOfScrumApp.cursors = MastersOfScrumApp.gameInstance.input.keyboard.createCursorKeys();
@@ -153,7 +159,8 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //Init new game session
 
         //Object
-        MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2, 5, 5);
+        MastersOfScrumApp.groundSprite.fadeIn.start();
+
     };
 
     return MastersOfScrumApp;

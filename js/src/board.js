@@ -27,30 +27,67 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
         this.maxGameLength = gameLength;
         this.targetPoints = targetPoints;
 
-        //Turn tracker
-        this.turnText = MastersOfScrumApp.gameInstance.add.text(800, 20, this.getTurnString());
-        this.turnText.anchor.setTo(0.5);
-        this.turnText.font = 'Press Start 2P';
-        this.turnText.fontSize = 14;
-        this.turnText.fill = '#FFFFFF';
-        this.turnText.align = 'center';
-        this.turnText.stroke = '#000000';
-        this.turnText.strokeThickness = 2;
-        this.turnText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
-
-        this.turnText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.turnText);
-        this.turnText.bounce.to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 }, 3000, Phaser.Easing.Bounce.Out);
-        this.turnText.bounce.start();
-        
         //Stories
-        for(var i=0; i<rows; i++){
-            for(var j=0; j<columns; j++){
-                this.stories.push(new Story(this.mastersOfScrumApp, this.getRandomStoryType(), this.getRandomFib(), 400+(400 * i), 200+(400 * j)));
-            }
-        }
+        //Run planning sequence
+        this.planningText = this.getText(0, 180, 'PO: PLANNING BEGINS! (Click to Continue)');
+        this.planningText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.planningText)
+            .to({ x: this.mastersOfScrumApp.gameInstance.world.width/2}, 2000, Phaser.Easing.Bounce.Out);
+        this.planningText.inputEnabled = true;
+        this.planningText.events.onInputDown.add(this.getNextText, this);
+        this.planningText.bounce.start();
+        this.planningText.currentStep = 1;
+
+        this.rows = rows;
+        this.columns = columns;
+
     };
 
     Board.prototype = {
+        spawnStories: function(){
+            for(var i=0; i<this.rows; i++){
+                var nextX = 0;
+                for(var j=0; j<this.columns; j++){
+                    nextX = (Math.random()*400) + 200;
+                    this.stories.push(new Story(this.mastersOfScrumApp, this.getRandomStoryType(), this.getRandomFib(), 400+(nextX * i), 300+(200 * j)));
+                }
+            }
+        },
+        getNextText: function(){
+            this.planningText.currentStep++;
+            switch(this.planningText.currentStep)    {
+                case 2:
+                    this.planningText.text = 'PO: THE CLIENT NEEDS AS MUCH OF THIS DONE AS POSSIBLE.';
+                    this.planningText.grow = this.mastersOfScrumApp.gameInstance.add.tween(this.planningText.scale)
+                        .to({x: 1.2, y:1.2}, 500, Phaser.Easing.Bounce.Out);
+                    this.planningText.grow.start();
+                    break;
+                case 3:
+                    this.planningText.text = 'PO: YOUR VELOCITY SHOULD BE AT LEAST 12 POINTS THIS SPRINT.';
+                    this.planningText.grow.to({x: 1.2, y: 1.2}, 500, Phaser.Easing.Bounce.Out);
+                    this.planningText.grow.start();
+                    this.spawnStories();
+                    break;
+                case 4:
+                    this.planningText.text = 'PO: HEAVEN OR HELL, LETS ROCK!';
+                    this.planningText.grow.to({x: 2, y: 2}, 500, Phaser.Easing.Bounce.Out)
+                        .to({x:0.001, y:0.001}, 500, Phaser.Easing.Bounce.Out);
+                    this.planningText.grow.start();
+                    this.initTurnTracker();
+                    break;
+            }
+        },
+        getText: function(x, y, text){
+            var textObj = this.mastersOfScrumApp.gameInstance.add.text(x, y, text);
+            textObj.anchor.setTo(0.5);
+            textObj.font = 'Press Start 2P';
+            textObj.fontSize = 14;
+            textObj.fill = '#FFFFFF';
+            textObj.align = 'center';
+            textObj.stroke = '#000000';
+            textObj.strokeThickness = 2;
+            textObj.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+            return textObj;
+        },
         update: function(){
             _.each(this.players, function(player){
                 player.update();
@@ -117,6 +154,13 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             this.gameLength--;
             this.turnText.text = this.getTurnString();
         },
+        initTurnTracker: function(){
+            //Turn tracker
+            this.turnText = this.getText(800, 20, this.getTurnString());
+            this.turnText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.turnText);
+            this.turnText.bounce.to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 }, 3000, Phaser.Easing.Bounce.Out);
+            this.turnText.bounce.start();
+        },
         setActivePlayer: function(playerObj){
             _.each(this.players, function(player){
                 player.isActive = false;
@@ -153,7 +197,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes'], functio
             }
         },
         getTurnString: function(){
-            return 'TURNS REMAINING: ' + this.gameLength + ' / ' +this.maxGameLength;
+            return 'DAYS REMAINING IN SPRINT: ' + this.gameLength + ' / ' +this.maxGameLength;
         }
     };
 
