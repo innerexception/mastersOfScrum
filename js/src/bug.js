@@ -39,12 +39,14 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.hitEmitter.setAlpha(0.3, 0.8);
         this.hitEmitter.gravity = 0;
 
+        this.mastersOfScrumApp.board.hasActiveBugs++;
+
       //	false means don't explode all the sprites at once, but instead release at a rate of one particle per 100ms
         //	The 3000 value is the lifespan of each particle before it's killed
         //this.hitEmitter.start(false, 3000, 1000);
 
         this.sprite.appear=this.mastersOfScrumApp.gameInstance.add.tween(this.sprite.scale)
-          .to({x: 0.5, y:0.5}, 2000, Phaser.Easing.Bounce.Out);
+          .to({x: 0.3, y:0.3}, 2000, Phaser.Easing.Bounce.Out);
         this.sprite.appear.start();
   };
 
@@ -89,8 +91,10 @@ define(['phaser', 'lodash'], function(Phaser, _){
         if(this.hp <= 0){
             this.sprite.kill();
             this.sprite.visible = false;
+            this.mastersOfScrumApp.board.hasActiveBugs--;
+            this.mastersOfScrumApp.board.hasActiveBugs = Math.max(0,this.mastersOfScrumApp.board.hasActiveBugs);
         }
-        this.hitEmitter.start(true);
+        this.hitEmitter.start(true, 1000, null, 5);
         bulletSprite.kill();
         bulletSprite.visible = false;
     },

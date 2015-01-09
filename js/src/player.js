@@ -47,7 +47,6 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.bullets = this.mastersOfScrumApp.gameInstance.add.group();
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this.bullets.createMultiple(30, 'bullet', 0, false);
         this.bullets.setAll('anchor.x', 0.5);
         this.bullets.setAll('anchor.y', 0.5);
         this.bullets.setAll('outOfBoundsKill', true);
@@ -81,8 +80,8 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
   Player.prototype = {
     fireBullet: function(){
-        if(this.isActive){
-            var bullet = this.bullets.create(this.sprite.x,this.sprite.y, 'bullet', 17);
+        if(this.isActive && this.mastersOfScrumApp.board.hasActiveBugs){
+            var bullet = this.bullets.create(this.avatarSprite.x,this.avatarSprite.y, 'foosBall', 17);
             this.mastersOfScrumApp.gameInstance.physics.arcade.accelerateToPointer(bullet, null, 250);
         }
     },
@@ -104,13 +103,18 @@ define(['phaser', 'lodash'], function(Phaser, _){
             this.mastersOfScrumApp.board.activeCursorSprite.y = this.sprite.y;
             this.mastersOfScrumApp.board.activeCursorSprite.rotation = this.sprite.rotation;
 
-            this.mastersOfScrumApp.board.arrowSprite.rotation = this.sprite.rotation;
-            this.mastersOfScrumApp.board.arrowSprite.x = this.sprite.x;
-            this.mastersOfScrumApp.board.arrowSprite.y = this.sprite.y;
-            var distancePointer = this.mastersOfScrumApp.gameInstance.physics.arcade.distanceToPointer(this.sprite);
-            this.mastersOfScrumApp.board.arrowSprite.scale.x = (distancePointer/100)/4;
-            this.mastersOfScrumApp.board.arrowSprite.scale.y = (distancePointer/100)/4;
-
+            if(this.mastersOfScrumApp.board.hasActiveBugs){
+                this.mastersOfScrumApp.board.arrowSprite.rotation = this.sprite.rotation;
+                this.mastersOfScrumApp.board.arrowSprite.x = this.sprite.x;
+                this.mastersOfScrumApp.board.arrowSprite.y = this.sprite.y;
+                var distancePointer = this.mastersOfScrumApp.gameInstance.physics.arcade.distanceToPointer(this.sprite);
+                this.mastersOfScrumApp.board.arrowSprite.scale.x = (distancePointer/100)/4;
+                this.mastersOfScrumApp.board.arrowSprite.scale.y = (distancePointer/100)/4;
+            }
+            else{
+                this.mastersOfScrumApp.board.arrowSprite.scale.x = 0.00001;
+                this.mastersOfScrumApp.board.arrowSprite.scale.y = 0.00001;
+            }
 
             if(this.playerSettings.moves > 0) {
                 if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){
@@ -152,7 +156,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
             this.sprite.scale.x = (this.playerSettings.moves / this.playerSettings.maxMoves) * (this.playerSettings.maxMoves / 25);
         }
         else{
-            this.sprite.scale.x = 0.0000001;
+            this.sprite.scale.x = 0.000001;
         }
 
         if(this.speed > 0){

@@ -1,7 +1,7 @@
 define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], function(_, Player, PlayerTypes, Story, StoryTypes, Bug){
     var Board = function(MastersOfScrumApp, rows, columns, gameLength, targetPoints){
         this.mastersOfScrumApp = MastersOfScrumApp;
-
+        this.hasActiveBugs = 0;
         //Sprites
         this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(-15, 60, 'hourglass');
         this.endTurnSprite.inputEnabled = true;
@@ -16,7 +16,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
         var bmp = this.mastersOfScrumApp.gameInstance.add.bitmapData(500, 500);
         bmp.ctx.beginPath();
         bmp.ctx.lineWidth = '3';
-        bmp.ctx.strokeStyle = 'white';
+        bmp.ctx.strokeStyle = 'rgb(239,237,79)';
         bmp.ctx.setLineDash([2,3]);
         bmp.ctx.moveTo(250,250);
         bmp.ctx.lineTo(500,250);
