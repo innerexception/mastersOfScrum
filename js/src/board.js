@@ -13,20 +13,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
             .to({ x: 50}, 2000, Phaser.Easing.Bounce.Out);
         this.endTurnSprite.bounce.start();
 
-        var bmp = this.mastersOfScrumApp.gameInstance.add.bitmapData(500, 500);
-        bmp.ctx.beginPath();
-        bmp.ctx.lineWidth = '3';
-        bmp.ctx.strokeStyle = 'rgb(239,237,79)';
-        bmp.ctx.setLineDash([2,3]);
-        bmp.ctx.moveTo(250,250);
-        bmp.ctx.lineTo(500,250);
-        bmp.ctx.moveTo(380,280);
-        bmp.ctx.lineTo(500,250);
-        bmp.ctx.moveTo(380,220);
-        bmp.ctx.lineTo(500,250);
-        bmp.ctx.stroke();
-        bmp.ctx.closePath();
-        this.arrowSprite = this.mastersOfScrumApp.gameInstance.add.sprite(-100, -100, bmp);
+        this.arrowSprite = this.mastersOfScrumApp.gameInstance.add.sprite(-100, -100, 'target');
         this.arrowSprite.anchor.setTo(0.5);
 
         this.activeCursorSprite = MastersOfScrumApp.gameInstance.add.sprite(-400, -10, 'activeCursor');

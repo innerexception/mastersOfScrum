@@ -80,9 +80,10 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
   Player.prototype = {
     fireBullet: function(){
-        if(this.isActive && this.mastersOfScrumApp.board.hasActiveBugs){
+        if(this.isActive && this.mastersOfScrumApp.board.hasActiveBugs && this.playerSettings.bugShots){
             var bullet = this.bullets.create(this.avatarSprite.x,this.avatarSprite.y, 'foosBall', 17);
             this.mastersOfScrumApp.gameInstance.physics.arcade.accelerateToPointer(bullet, null, 250);
+            this.playerSettings.bugShots--;
         }
     },
     removeMoves: function(){
@@ -105,18 +106,25 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
             if(this.mastersOfScrumApp.board.hasActiveBugs){
                 this.mastersOfScrumApp.board.arrowSprite.rotation = this.sprite.rotation;
-                this.mastersOfScrumApp.board.arrowSprite.x = this.sprite.x;
-                this.mastersOfScrumApp.board.arrowSprite.y = this.sprite.y;
-                var distancePointer = this.mastersOfScrumApp.gameInstance.physics.arcade.distanceToPointer(this.sprite);
-                this.mastersOfScrumApp.board.arrowSprite.scale.x = (distancePointer/100)/4;
-                this.mastersOfScrumApp.board.arrowSprite.scale.y = (distancePointer/100)/4;
+                this.mastersOfScrumApp.board.arrowSprite.x = this.mastersOfScrumApp.gameInstance.input.mousePointer.x;
+                this.mastersOfScrumApp.board.arrowSprite.y = this.mastersOfScrumApp.gameInstance.input.mousePointer.y;
+                this.mastersOfScrumApp.board.arrowSprite.scale.x =1;
+                this.mastersOfScrumApp.board.arrowSprite.scale.y =1;
+                //Draw ammo meter
+//                this.ammoMeterSprite.x = this.avatarSprite.x;
+//                this.ammoMeterSprite.y = this.avatarSprite.y+50;
+//                this.ammoMeterSprite.scale.x = 1;
+//                this.ammoMeterSprite.scale.y = 1;
+
             }
             else{
                 this.mastersOfScrumApp.board.arrowSprite.scale.x = 0.00001;
                 this.mastersOfScrumApp.board.arrowSprite.scale.y = 0.00001;
+//                this.ammoMeterSprite.scale.x = 0.0001;
+//                this.ammoMeterSprite.scale.y = 0.0001;
             }
 
-            if(this.playerSettings.moves > 0) {
+            if(this.playerSettings.moves > 0 && !this.mastersOfScrumApp.board.hasActiveBugs) {
                 if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){
                     this.speed = 150;
                     this.playerSettings.moves -= 0.1;

@@ -97,6 +97,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.gameInstance.load.image('moneyBag', 'res/sprite/moneybag.png');
         MastersOfScrumApp.gameInstance.load.image('bug', 'res/sprite/bug.png');
         MastersOfScrumApp.gameInstance.load.image('foosBall', 'res/sprite/foosBall.png');
+        MastersOfScrumApp.gameInstance.load.image('target', 'res/sprite/target.png');
 
 
         //MastersOfScrumApp.gameInstance.load.spritesheet('torso', 'res/img/torso2.png', 32, 32);
