@@ -44,10 +44,15 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.avatarSprite.body.bounce.setTo(0.05,0.05);
 
         //bug shots
-        this.bullets = mastersOfScrumApp.gameInstance.add.group();
+        this.bullets = this.mastersOfScrumApp.gameInstance.add.group();
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-
+        this.bullets.createMultiple(30, 'bullet', 0, false);
+        this.bullets.setAll('anchor.x', 0.5);
+        this.bullets.setAll('anchor.y', 0.5);
+        this.bullets.setAll('outOfBoundsKill', true);
+        this.bullets.setAll('checkWorldBounds', true);
+        this.mastersOfScrumApp.gameInstance.input.onDown.add(this.fireBullet, this);
 
         this.sprite.bringToTop();
         this.avatarSprite.bringToTop();
@@ -75,7 +80,12 @@ define(['phaser', 'lodash'], function(Phaser, _){
   };
 
   Player.prototype = {
-
+    fireBullet: function(){
+        if(this.isActive){
+            var bullet = this.bullets.create(this.sprite.x,this.sprite.y, 'bullet', 17);
+            this.mastersOfScrumApp.gameInstance.physics.arcade.accelerateToPointer(bullet, null, 250);
+        }
+    },
     removeMoves: function(){
         this.playerSettings.moves = 0;
     },
@@ -137,7 +147,6 @@ define(['phaser', 'lodash'], function(Phaser, _){
                 null,
                 this);
         }, this);
-
 
         if(this.playerSettings.moves > 0) {
             this.sprite.scale.x = (this.playerSettings.moves / this.playerSettings.maxMoves) * (this.playerSettings.maxMoves / 25);

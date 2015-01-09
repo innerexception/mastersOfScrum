@@ -8,6 +8,8 @@ define(['phaser', 'lodash'], function(Phaser, _){
         var x = -50;
         var y = mastersOfScrumApp.gameInstance.world.height/2;
 
+        this.hp = 50;
+
         //Graphicx
         this.sprite = mastersOfScrumApp.gameInstance.add.sprite(x,y,'bug');
         this.sprite.scale.x = 0.0001;
@@ -48,9 +50,6 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
   Player.prototype = {
 
-    damaged: function(amount){
-
-    },
     playerMouseOver: function(){
         this.mastersOfScrumApp.drawTooltip(this.sprite.x, this.sprite.y-25, 'Incoming bug!');
     },
@@ -70,10 +69,30 @@ define(['phaser', 'lodash'], function(Phaser, _){
                 this.bugPlayerCollide,
                 null,
                 this);
+
+            this.mastersOfScrumApp.gameInstance.physics.arcade.overlap(
+                this.sprite,
+                player.bullets,
+                this.bugBulletCollide,
+                null,
+                this);
+
         }, this);
 
         this.hitEmitter.x = this.sprite.x;
         this.hitEmitter.y = this.sprite.y;
+    },
+
+    bugBulletCollide: function(bugSprite, bulletSprite){
+        //Take damage, destroy if necessary
+        this.hp -= 20;
+        if(this.hp <= 0){
+            this.sprite.kill();
+            this.sprite.visible = false;
+        }
+        this.hitEmitter.start(true);
+        bulletSprite.kill();
+        bulletSprite.visible = false;
     },
 
     bugPlayerCollide: function(bugSprite, playerSprite) {
