@@ -27,7 +27,6 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.sprite.angle = mastersOfScrumApp.gameInstance.rnd.angle();
         this.sprite.inputEnabled = true;
         this.sprite.events.onInputOver.add(this.playerMouseOver, this);
-        this.sprite.events.onInputOut.add(this.playerMouseOut, this);
 
         this.sprite.bringToTop();
 
@@ -40,6 +39,14 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.hitEmitter.gravity = 0;
 
         this.mastersOfScrumApp.board.hasActiveBugs++;
+        if(this.mastersOfScrumApp.board.hasActiveBugs === 1){
+            //Draw bug warning
+            this.mastersOfScrumApp.drawTooltip(400, 300, 'BUG ALERT! EVERYONE FREEZE! KILL IT!', 32, 3000);
+        }
+
+      _.each(this.mastersOfScrumApp.board.players, function(player){
+          player.drawAmmoMeter();
+      }, this);
 
       //	false means don't explode all the sprites at once, but instead release at a rate of one particle per 100ms
         //	The 3000 value is the lifespan of each particle before it's killed
@@ -54,9 +61,6 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
     playerMouseOver: function(){
         this.mastersOfScrumApp.drawTooltip(this.sprite.x, this.sprite.y-25, 'Incoming bug!');
-    },
-    playerMouseOut: function(){
-        this.mastersOfScrumApp.killTooltip();
     },
     update: function(){
         if(this.mastersOfScrumApp.board.isReady){
@@ -92,7 +96,13 @@ define(['phaser', 'lodash'], function(Phaser, _){
             this.sprite.kill();
             this.sprite.visible = false;
             this.mastersOfScrumApp.board.hasActiveBugs--;
+            if(this.mastersOfScrumApp.board.hasActiveBugs === 0){
+                this.mastersOfScrumApp.drawTooltip(400, 300, 'Nice job people, back to work.', 24, 3000);
+            }
             this.mastersOfScrumApp.board.hasActiveBugs = Math.max(0,this.mastersOfScrumApp.board.hasActiveBugs);
+            _.each(this.mastersOfScrumApp.board.players, function(player){
+                player.drawAmmoMeter();
+            }, this);
         }
         this.hitEmitter.start(true, 1000, null, 5);
         bulletSprite.kill();

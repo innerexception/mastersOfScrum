@@ -137,19 +137,13 @@ define(['lodash', 'connection'], function(_, Connection){
                 return player.activeStory === this;
             }, this);
 
-            var that = this;
             var tweenPlayer = false;
             if(playerObj.playerSettings.name==='SCRUM'){
                 this.mastersOfScrumApp.drawTooltip(playerObj.avatarSprite.x, playerObj.avatarSprite.y+35, 'SCRUM master dont work on cards son!');
-                window.setTimeout(function(){
-                    that.mastersOfScrumApp.killTooltip();
-                }, 3000);
             }
             else if(playerObj.playerSettings.name==='QA' && this.difficulty != 0) {
                 this.mastersOfScrumApp.drawTooltip(playerObj.avatarSprite.x, playerObj.avatarSprite.y+35, 'This card is not ready for QA!');
-                window.setTimeout(function(){
-                    that.mastersOfScrumApp.killTooltip();
-                }, 3000);
+
             }
             else if(playerObj.playerSettings.name === 'QA' && this.difficulty === 0){
                 tweenPlayer = true;
@@ -164,12 +158,11 @@ define(['lodash', 'connection'], function(_, Connection){
                 //Only devs can have active stories
                 playerObj.activeStory = this;
                 tweenPlayer = true;
+                this.mastersOfScrumApp.drawTooltip(400, 300, 'Dev assigned to story...', 18, 2000);
             }
             else if(existingPlayers.length >= 2){
-                this.mastersOfScrumApp.drawTooltip(playerObj.avatarSprite.x, playerObj.avatarSprite.y+35, 'Too many people on this card!');
-                window.setTimeout(function(){
-                    that.mastersOfScrumApp.killTooltip();
-                }, 3000);
+                this.mastersOfScrumApp.drawTooltip(playerObj.avatarSprite.x, playerObj.avatarSprite.y+35, 'MAX people people on this card!');
+
             }
 
             if(tweenPlayer){
@@ -182,6 +175,7 @@ define(['lodash', 'connection'], function(_, Connection){
                 this.mastersOfScrumApp.board.setActivePlayer(null);
                 playerObj.sprite.bringToTop();
                 playerObj.avatarSprite.bringToTop();
+
                 this.mastersOfScrumApp.playerTween = this.mastersOfScrumApp.gameInstance.add.tween(playerObj.sprite);
                 this.mastersOfScrumApp.playerTween.to({x:this.sprite.x, y:this.sprite.y-10, angle:0}, 3000, Phaser.Easing.Bounce.Out);
                 this.mastersOfScrumApp.playerTween.start();
@@ -191,6 +185,7 @@ define(['lodash', 'connection'], function(_, Connection){
 
         },
         startPathBuilder: function(){
+            this.mastersOfScrumApp.drawTooltip(400, 400, 'QA is working...', 18, 2000);
             this.handle1 = this.mastersOfScrumApp.gameInstance.add.sprite(this.sprite.x+(this.sprite.width/2), this.sprite.y, 'gripper');
             this.handle1.anchor.set(0.5);
 

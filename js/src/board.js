@@ -163,6 +163,10 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
             //reset character stats
             this.scrumMaster.playerSettings.moves = this.scrumMaster.playerSettings.maxMoves;
 
+            this.redPlayer.playerSettings.moves = 5;
+            this.yellowPlayer.playerSettings.moves = 5;
+            this.bluePlayer.playerSettings.moves = 5;
+
             //decrement turns
             this.gameLength--;
             this.turnText.text = this.getTurnString();
@@ -195,12 +199,15 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
                 playerObj.isActive = true;
                 this.mastersOfScrumApp.activePlayer = playerObj;
                 this.mastersOfScrumApp.gameInstance.camera.follow(playerObj.sprite);
+                playerObj.drawAmmoMeter();
             }
             else{
-                this.mastersOfScrumApp.board.activeCursorSprite.x = -40;
-                this.mastersOfScrumApp.board.activeCursorSprite.y = -40;
-                this.mastersOfScrumApp.board.arrowSprite.scale.x = 0.0001;
-                this.mastersOfScrumApp.board.arrowSprite.scale.y = 0.0001;
+                this.activeCursorSprite.x = -40;
+                this.activeCursorSprite.y = -40;
+                this.arrowSprite.scale.x = 0.0001;
+                this.arrowSprite.scale.y = 0.0001;
+                this.activeCursorSprite.bringToTop();
+                this.arrowSprite.bringToTop();
                 this.mastersOfScrumApp.gameInstance.camera.unfollow();
             }
         },

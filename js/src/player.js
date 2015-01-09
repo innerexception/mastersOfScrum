@@ -76,6 +76,9 @@ define(['phaser', 'lodash'], function(Phaser, _){
           .to({x: 50}, 2000, Phaser.Easing.Bounce.Out);
         this.avatarSprite.fall.start();
 
+      //Draw ammo meter
+      this.drawAmmoMeter();
+
   };
 
   Player.prototype = {
@@ -84,9 +87,32 @@ define(['phaser', 'lodash'], function(Phaser, _){
             var bullet = this.bullets.create(this.avatarSprite.x,this.avatarSprite.y, 'foosBall', 17);
             this.mastersOfScrumApp.gameInstance.physics.arcade.accelerateToPointer(bullet, null, 250);
             this.playerSettings.bugShots--;
+            this.drawAmmoMeter();
+        }
+        else if(!this.playerSettings.bugShots && this.isActive && this.mastersOfScrumApp.board.hasActiveBugs){
+            this.mastersOfScrumApp.drawTooltip(this.avatarSprite.x, this.avatarSprite.y, 'OUT OF AMMO!');
+        }
+    },
+    drawAmmoMeter: function(){
+        _.each(this.ammoMeterSprites, function(sprite){
+            sprite.kill();
+        }, this);
+        this.ammoMeterSprites = [];
+        if(this.mastersOfScrumApp.board ? this.mastersOfScrumApp.board.hasActiveBugs : false) {
+            this.ammoMarkers = this.mastersOfScrumApp.gameInstance.add.group();
+            this.ammoMarkers.enableBody = false;
+
+            for (var i = 0; i < this.playerSettings.bugShots; i++) {
+                var bullet = this.ammoMarkers.create(this.avatarSprite.x -20 + (i * 15), this.avatarSprite.y + 30, 'foosBall');
+                bullet.bringToTop();
+                this.ammoMeterSprites.push(bullet);
+            }
         }
     },
     removeMoves: function(){
+        if(this.playerSettings.moves != 0){
+            this.mastersOfScrumApp.drawTooltip(this.avatarSprite.x, this.avatarSprite.y, 'LOST ALL MOVES!');
+        }
         this.playerSettings.moves = 0;
     },
     playerMouseOver: function(){
@@ -110,21 +136,13 @@ define(['phaser', 'lodash'], function(Phaser, _){
                 this.mastersOfScrumApp.board.arrowSprite.y = this.mastersOfScrumApp.gameInstance.input.mousePointer.y;
                 this.mastersOfScrumApp.board.arrowSprite.scale.x =1;
                 this.mastersOfScrumApp.board.arrowSprite.scale.y =1;
-                //Draw ammo meter
-//                this.ammoMeterSprite.x = this.avatarSprite.x;
-//                this.ammoMeterSprite.y = this.avatarSprite.y+50;
-//                this.ammoMeterSprite.scale.x = 1;
-//                this.ammoMeterSprite.scale.y = 1;
-
             }
             else{
                 this.mastersOfScrumApp.board.arrowSprite.scale.x = 0.00001;
                 this.mastersOfScrumApp.board.arrowSprite.scale.y = 0.00001;
-//                this.ammoMeterSprite.scale.x = 0.0001;
-//                this.ammoMeterSprite.scale.y = 0.0001;
             }
 
-            if(this.playerSettings.moves > 0 && !this.mastersOfScrumApp.board.hasActiveBugs) {
+            if(this.playerSettings.moves > 0 && (!this.mastersOfScrumApp.board.hasActiveBugs || this.playerSettings.name === 'SCRUM')) {
                 if(this.mastersOfScrumApp.gameInstance.input.activePointer.isDown){
                     this.speed = 150;
                     this.playerSettings.moves -= 0.1;
@@ -198,7 +216,9 @@ define(['phaser', 'lodash'], function(Phaser, _){
             if (playerObj.playerSettings.moves != playerObj.playerSettings.maxMoves) {
                 playerObj.playerSettings.moves = playerObj.playerSettings.maxMoves;
             }
-            console.log('scrum refill!!');
+            playerObj.bugShots = playerObj.maxBugShots;
+            this.drawAmmoMeter();
+            this.mastersOfScrumApp.drawTooltip(scrumSprite.x, scrumSprite.y, 'REFILLED moves and ammo!');
         }
     },
     destroy: function(){
