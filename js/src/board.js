@@ -38,16 +38,8 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
 
         //Stories
         //Run planning sequence
-        this.planningText = this.getText(0, 60, 'PO: PLANNING BEGINS! (Click to Continue)');
-        this.planningText.wordWrap = true;
-        this.planningText.wordWrapWidth = 500;
-        this.planningText.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.planningText)
-            .to({ x: this.mastersOfScrumApp.gameInstance.world.width/3 - 100}, 2000, Phaser.Easing.Bounce.Out);
-        this.planningText.inputEnabled = true;
-        this.planningText.events.onInputDown.add(this.getNextText, this);
-        this.planningText.bounce.start();
-        this.planningText.currentStep = 1;
-
+        this.currentStep = 1;
+        this.mastersOfScrumApp.drawBannerMessage('PO: PLANNING BEGINS!', 24, 3000, this.getNextText, this);
         this.rows = rows;
         this.columns = columns;
 
@@ -64,26 +56,18 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
             }
         },
         getNextText: function(){
-            this.planningText.currentStep++;
-            switch(this.planningText.currentStep)    {
+            this.currentStep++;
+            switch(this.currentStep)    {
                 case 2:
-                    this.planningText.text = 'PO: THE CLIENT NEEDS AS MUCH OF THIS DONE AS POSSIBLE.';
-                    this.planningText.grow = this.mastersOfScrumApp.gameInstance.add.tween(this.planningText.scale)
-                        .to({x: 1.2, y:1.2}, 500, Phaser.Easing.Bounce.Out);
-                    this.planningText.grow.start();
+                    this.mastersOfScrumApp.drawBannerMessage('PO: THE CLIENT NEEDS AS MUCH OF THIS DONE AS POSSIBLE.', 24, 3000, this.getNextText, this);
                     break;
                 case 3:
-                    this.planningText.text = 'PO: YOUR VELOCITY SHOULD BE AT LEAST '+this.targetPoints+' POINTS THIS SPRINT.';
-                    this.planningText.grow.to({x: 1.2, y: 1.2}, 500, Phaser.Easing.Bounce.Out);
-                    this.planningText.grow.start();
+                    this.mastersOfScrumApp.drawBannerMessage('PO: YOUR VELOCITY SHOULD BE AT LEAST '+this.targetPoints+' POINTS THIS SPRINT.', 24, 3000, this.getNextText, this);
                     this.spawnStories();
                     break;
                 case 4:
-                    this.planningText.text = 'PO: HEAVEN OR HELL, LETS ROCK!';
-                    this.planningText.grow.to({x: 3, y: 3}, 500, Phaser.Easing.Bounce.Out)
-                        .to({x:0.001, y:0.001}, 500, Phaser.Easing.Bounce.Out);
-                    this.planningText.grow.onComplete.addOnce(this.initTurnTracker, this);
-                    this.planningText.grow.start();
+                    this.mastersOfScrumApp.drawBannerMessage('PO: HEAVEN OR HELL, LETS ROCK!', 48, 1000, this.getNextText, this);
+                    this.initTurnTracker();
                     break;
             }
         },
@@ -156,7 +140,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
                 if(playerReductionTotal && story.difficulty != 0)
                     story.setDifficulty(story.difficulty -= playerReductionTotal);
                 //bug spawns
-                if(Math.round((Math.random()*100)) < playerMaxBugChance) this.bugs.push(new Bug(this.mastersOfScrumApp));
+                if(Math.round((Math.random()*100)) < playerMaxBugChance) this.bugs.push(new Bug(this.mastersOfScrumApp, story.sprite.x, story.sprite.y));
             }, this);
             //random events
 

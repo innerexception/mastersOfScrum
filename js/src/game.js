@@ -110,6 +110,8 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         //1st time load
         MastersOfScrumApp.gameInstance.world.setBounds(0,0,1600,600);
 
+        MastersOfScrumApp.tooltips = {};
+
         //Base sprite
         MastersOfScrumApp.groundSprite = MastersOfScrumApp.gameInstance.add.sprite(0,0, 'board');
         MastersOfScrumApp.groundSprite.scale.x = 1.5;
@@ -120,7 +122,6 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.groundSprite.fadeIn.onComplete.addOnce(function(){
             MastersOfScrumApp.board = new Board(MastersOfScrumApp, 2, 2, 5, 5);
             MastersOfScrumApp.inGame = true;
-            MastersOfScrumApp.tooltips = {};
         }, this);
 
         MastersOfScrumApp.gripperContext = MastersOfScrumApp.gameInstance.add.graphics();
@@ -184,6 +185,16 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         MastersOfScrumApp.logoSub.flicker = MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.logoSub);
         MastersOfScrumApp.logoSub.flicker.to({alpha:0}, 50, Phaser.Easing.Linear.None, true, 0, 40);
         MastersOfScrumApp.logoSub.flicker.start();
+
+        var bmp = MastersOfScrumApp.gameInstance.add.bitmapData(800, 600);
+        bmp.ctx.beginPath();
+        bmp.ctx.lineWidth = '300';
+        bmp.ctx.strokeStyle = 'rgba(55,55,55,0.5)';
+        bmp.ctx.moveTo(0,300);
+        bmp.ctx.lineTo(800,300);
+        bmp.ctx.stroke();
+        bmp.ctx.closePath();
+        MastersOfScrumApp.messageBackgroundSprite = MastersOfScrumApp.gameInstance.add.sprite(-800, 300, bmp);
 
         MastersOfScrumApp.startNewRound();
     };
@@ -285,6 +296,46 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
             delete MastersOfScrumApp.tooltips[text];
         }
     };
+
+    MastersOfScrumApp.drawBannerMessage = function(text, fontSiez, delay, callBack, context){
+        if(!MastersOfScrumApp.tooltips[text]){
+            MastersOfScrumApp.tooltips[text] = MastersOfScrumApp.gameInstance.add.text(-800, 300, text);
+            MastersOfScrumApp.tooltips[text].anchor.setTo(0.5);
+            MastersOfScrumApp.tooltips[text].wordWrap = true;
+            MastersOfScrumApp.tooltips[text].wordWrapWidth = 700;
+            MastersOfScrumApp.tooltips[text].font = 'Press Start 2P';
+            MastersOfScrumApp.tooltips[text].fontSize = fontSiez ? fontSiez : 8;
+            MastersOfScrumApp.tooltips[text].fill = '#FFFFFF';
+            MastersOfScrumApp.tooltips[text].align = 'center';
+            MastersOfScrumApp.tooltips[text].stroke = '#000000';
+            MastersOfScrumApp.tooltips[text].strokeThickness = 2;
+            MastersOfScrumApp.tooltips[text].setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+
+            MastersOfScrumApp.tooltips[text].bounce=MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.tooltips[text])
+                .to({ x:400 }, 500, Phaser.Easing.Linear.None)
+                .to({ x:420 }, delay ? delay : 3000)
+                .to({ x:1600}, 500, Phaser.Easing.Linear.None);
+            MastersOfScrumApp.tooltips[text].bounce.start();
+
+            MastersOfScrumApp.messageBackgroundSprite.x = -800;
+            MastersOfScrumApp.messageBackgroundSprite.y = 0;
+
+            MastersOfScrumApp.messageBackgroundSprite.bounce=MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.messageBackgroundSprite)
+                .to({ x:0 }, 500, Phaser.Easing.Linear.None)
+                .to({ x:0 }, delay ? delay : 3000)
+                .to({ x:1600}, 500, Phaser.Easing.Linear.None);
+            if(callBack){
+                MastersOfScrumApp.messageBackgroundSprite.bounce._lastChild.onComplete.addOnce(callBack, context);
+            }
+            MastersOfScrumApp.messageBackgroundSprite.bounce.start();
+
+        }
+        var that = MastersOfScrumApp;
+        window.setTimeout(function(){
+            that.killTooltip(text);
+        }, delay?delay+1000:4000);
+    };
+
 
     return MastersOfScrumApp;
 });

@@ -132,8 +132,8 @@ define(['phaser', 'lodash'], function(Phaser, _){
 
             if(this.mastersOfScrumApp.board.hasActiveBugs){
                 this.mastersOfScrumApp.board.arrowSprite.rotation = this.sprite.rotation;
-                this.mastersOfScrumApp.board.arrowSprite.x = this.mastersOfScrumApp.gameInstance.input.mousePointer.x;
-                this.mastersOfScrumApp.board.arrowSprite.y = this.mastersOfScrumApp.gameInstance.input.mousePointer.y;
+                this.mastersOfScrumApp.board.arrowSprite.x = this.mastersOfScrumApp.gameInstance.input.mousePointer.x+this.mastersOfScrumApp.gameInstance.camera.x;
+                this.mastersOfScrumApp.board.arrowSprite.y = this.mastersOfScrumApp.gameInstance.input.mousePointer.y+this.mastersOfScrumApp.gameInstance.camera.y;
                 this.mastersOfScrumApp.board.arrowSprite.scale.x =1;
                 this.mastersOfScrumApp.board.arrowSprite.scale.y =1;
             }
@@ -216,7 +216,9 @@ define(['phaser', 'lodash'], function(Phaser, _){
             if (playerObj.playerSettings.moves != playerObj.playerSettings.maxMoves) {
                 playerObj.playerSettings.moves = playerObj.playerSettings.maxMoves;
             }
-            playerObj.bugShots = playerObj.maxBugShots;
+            if(playerObj.bugShots === 0)
+                playerObj.bugShots = playerObj.maxBugShots;
+
             this.drawAmmoMeter();
             this.mastersOfScrumApp.drawTooltip(scrumSprite.x, scrumSprite.y, 'REFILLED moves and ammo!');
         }

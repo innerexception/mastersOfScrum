@@ -158,7 +158,7 @@ define(['lodash', 'connection'], function(_, Connection){
                 //Only devs can have active stories
                 playerObj.activeStory = this;
                 tweenPlayer = true;
-                this.mastersOfScrumApp.drawTooltip(400, 300, 'Dev assigned to story...', 18, 2000);
+                this.mastersOfScrumApp.drawTooltip(storySprite.x, storySprite.y, 'Dev assigned to story...', 14, 2000);
             }
             else if(existingPlayers.length >= 2){
                 this.mastersOfScrumApp.drawTooltip(playerObj.avatarSprite.x, playerObj.avatarSprite.y+35, 'MAX people people on this card!');
@@ -177,7 +177,7 @@ define(['lodash', 'connection'], function(_, Connection){
                 playerObj.avatarSprite.bringToTop();
 
                 this.mastersOfScrumApp.playerTween = this.mastersOfScrumApp.gameInstance.add.tween(playerObj.sprite);
-                this.mastersOfScrumApp.playerTween.to({x:this.sprite.x, y:this.sprite.y-10, angle:0}, 3000, Phaser.Easing.Bounce.Out);
+                this.mastersOfScrumApp.playerTween.to({x:this.sprite.x, y:this.sprite.y, angle:0}, 3000, Phaser.Easing.Bounce.Out);
                 this.mastersOfScrumApp.playerTween.start();
 
                 this.bounce.start();

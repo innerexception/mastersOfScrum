@@ -1,13 +1,10 @@
 define(['phaser', 'lodash'], function(Phaser, _){
 
-  var Player = function(mastersOfScrumApp){
+  var Player = function(mastersOfScrumApp, x, y){
       
         this.mastersOfScrumApp = mastersOfScrumApp;
 
         //Datas
-        var x = -50;
-        var y = mastersOfScrumApp.gameInstance.world.height/2;
-
         this.hp = 50;
 
         //Graphicx
@@ -41,7 +38,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.mastersOfScrumApp.board.hasActiveBugs++;
         if(this.mastersOfScrumApp.board.hasActiveBugs === 1){
             //Draw bug warning
-            this.mastersOfScrumApp.drawTooltip(400, 300, 'BUG ALERT! EVERYONE FREEZE! KILL IT!', 32, 3000);
+            this.mastersOfScrumApp.drawBannerMessage('BUG ALERT! EVERYONE KILL IT!', 32, 3000);
         }
 
       _.each(this.mastersOfScrumApp.board.players, function(player){
@@ -97,7 +94,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
             this.sprite.visible = false;
             this.mastersOfScrumApp.board.hasActiveBugs--;
             if(this.mastersOfScrumApp.board.hasActiveBugs === 0){
-                this.mastersOfScrumApp.drawTooltip(400, 300, 'Nice job people, back to work.', 24, 3000);
+                this.mastersOfScrumApp.drawBannerMessage('Nice job people, back to work.', 24, 3000);
             }
             this.mastersOfScrumApp.board.hasActiveBugs = Math.max(0,this.mastersOfScrumApp.board.hasActiveBugs);
             _.each(this.mastersOfScrumApp.board.players, function(player){
