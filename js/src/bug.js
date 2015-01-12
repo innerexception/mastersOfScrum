@@ -38,7 +38,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.mastersOfScrumApp.board.hasActiveBugs++;
         if(this.mastersOfScrumApp.board.hasActiveBugs === 1){
             //Draw bug warning
-            this.mastersOfScrumApp.drawBannerMessage('BUG ALERT! EVERYONE KILL IT!', 32, 3000);
+            this.mastersOfScrumApp.drawBannerMessage('BUG ALERT! EVERYONE KILL IT!', 32, 2000, null, null, 2000);
         }
 
       _.each(this.mastersOfScrumApp.board.players, function(player){
@@ -60,7 +60,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
         this.mastersOfScrumApp.drawTooltip(this.sprite.x, this.sprite.y-25, 'Incoming bug!');
     },
     update: function(){
-        if(this.mastersOfScrumApp.board.isReady){
+        if(this.mastersOfScrumApp.board.isReady && this.mastersOfScrumApp.activePlayer){
             this.sprite.angle = this.mastersOfScrumApp.gameInstance.physics.arcade.accelerateToObject(this.sprite, this.mastersOfScrumApp.activePlayer.sprite);
         }
 

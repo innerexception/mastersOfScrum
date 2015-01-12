@@ -297,7 +297,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
         }
     };
 
-    MastersOfScrumApp.drawBannerMessage = function(text, fontSiez, delay, callBack, context){
+    MastersOfScrumApp.drawBannerMessage = function(text, fontSiez, delay, callBack, context, wait){
         if(!MastersOfScrumApp.tooltips[text]){
             MastersOfScrumApp.tooltips[text] = MastersOfScrumApp.gameInstance.add.text(-800, 300, text);
             MastersOfScrumApp.tooltips[text].anchor.setTo(0.5);
@@ -315,10 +315,12 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
                 .to({ x:400 }, 500, Phaser.Easing.Linear.None)
                 .to({ x:420 }, delay ? delay : 3000)
                 .to({ x:1600}, 500, Phaser.Easing.Linear.None);
-            MastersOfScrumApp.tooltips[text].bounce.start();
+            wait ? MastersOfScrumApp.tooltips[text].bounce.delay(wait).start() :  MastersOfScrumApp.tooltips[text].bounce.start();
 
             MastersOfScrumApp.messageBackgroundSprite.x = -800;
             MastersOfScrumApp.messageBackgroundSprite.y = 0;
+            MastersOfScrumApp.messageBackgroundSprite.bringToTop();
+            MastersOfScrumApp.gameInstance.world.bringToTop(MastersOfScrumApp.tooltips[text]);
 
             MastersOfScrumApp.messageBackgroundSprite.bounce=MastersOfScrumApp.gameInstance.add.tween(MastersOfScrumApp.messageBackgroundSprite)
                 .to({ x:0 }, 500, Phaser.Easing.Linear.None)
@@ -327,7 +329,7 @@ define(['phaser', 'lodash', 'board'], function(Phaser, _, Board){
             if(callBack){
                 MastersOfScrumApp.messageBackgroundSprite.bounce._lastChild.onComplete.addOnce(callBack, context);
             }
-            MastersOfScrumApp.messageBackgroundSprite.bounce.start();
+            wait ? MastersOfScrumApp.messageBackgroundSprite.bounce.delay(wait).start() :  MastersOfScrumApp.messageBackgroundSprite.bounce.start();
 
         }
         var that = MastersOfScrumApp;

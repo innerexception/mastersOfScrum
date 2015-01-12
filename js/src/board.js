@@ -6,7 +6,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
         this.endTurnSprite = MastersOfScrumApp.gameInstance.add.sprite(-15, 60, 'hourglass');
         this.endTurnSprite.inputEnabled = true;
         this.endTurnSprite.anchor.setTo(0.5);
-        this.endTurnSprite.events.onInputDown.add(this.endTurn, this);
+        this.endTurnSprite.events.onInputDown.add(this.endTurnMessage, this);
         this.endTurnSprite.events.onInputOver.add(this.endTurnMouseOver, this);
         this.endTurnSprite.events.onInputOut.add(this.endTurnMouseOut, this);
         this.endTurnSprite.bounce=this.mastersOfScrumApp.gameInstance.add.tween(this.endTurnSprite)
@@ -39,7 +39,7 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
         //Stories
         //Run planning sequence
         this.currentStep = 1;
-        this.mastersOfScrumApp.drawBannerMessage('PO: PLANNING BEGINS!', 24, 3000, this.getNextText, this);
+        this.mastersOfScrumApp.drawBannerMessage('PO: "PLANNING BEGINS!"', 24, 3000, this.getNextText, this);
         this.rows = rows;
         this.columns = columns;
 
@@ -59,14 +59,14 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
             this.currentStep++;
             switch(this.currentStep)    {
                 case 2:
-                    this.mastersOfScrumApp.drawBannerMessage('PO: THE CLIENT NEEDS AS MUCH OF THIS DONE AS POSSIBLE.', 24, 3000, this.getNextText, this);
+                    this.mastersOfScrumApp.drawBannerMessage('PO: "THE CLIENT NEEDS AS MUCH OF THIS DONE AS POSSIBLE."', 24, 3000, this.getNextText, this);
                     break;
                 case 3:
-                    this.mastersOfScrumApp.drawBannerMessage('PO: YOUR VELOCITY SHOULD BE AT LEAST '+this.targetPoints+' POINTS THIS SPRINT.', 24, 3000, this.getNextText, this);
                     this.spawnStories();
+                    this.mastersOfScrumApp.drawBannerMessage('PO: "YOUR VELOCITY SHOULD BE AT LEAST '+this.targetPoints+' POINTS THIS SPRINT."', 24, 3000, this.getNextText, this);
                     break;
                 case 4:
-                    this.mastersOfScrumApp.drawBannerMessage('PO: HEAVEN OR HELL, LETS ROCK!', 48, 1000, this.getNextText, this);
+                    this.mastersOfScrumApp.drawBannerMessage('PO: "HEAVEN OR HELL, LETS ROCK!"', 48, 1000, this.getNextText, this);
                     this.initTurnTracker();
                     break;
             }
@@ -109,6 +109,9 @@ define(['lodash', 'player', 'mosPlayerTypes', 'story', 'mosStoryTypes', 'bug'], 
             });
             //set redDev to active
             this.setActivePlayer(this.players[0]);
+        },
+        endTurnMessage: function(){
+            this.mastersOfScrumApp.drawBannerMessage('Day Ended! '+this.gameLength + ' Days Remain!', 32, 3000, this.endTurn, this);
         },
         endTurn: function(){
             //check victory

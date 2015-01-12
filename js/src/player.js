@@ -85,6 +85,7 @@ define(['phaser', 'lodash'], function(Phaser, _){
     fireBullet: function(){
         if(this.isActive && this.mastersOfScrumApp.board.hasActiveBugs && this.playerSettings.bugShots){
             var bullet = this.bullets.create(this.avatarSprite.x,this.avatarSprite.y, 'foosBall', 17);
+            this.mastersOfScrumApp.gameInstance.world.bringToTop(this.bullets);
             this.mastersOfScrumApp.gameInstance.physics.arcade.accelerateToPointer(bullet, null, 250);
             this.playerSettings.bugShots--;
             this.drawAmmoMeter();
